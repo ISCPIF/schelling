@@ -25,6 +25,8 @@ trait RandomState <: InitialState { self: Schelling =>
   def maxCapacity: Int
 
   def initialState(implicit rng: Random) = {
+
+
     val cells = Seq.fill(size, size) {
       val capacity = rng.nextInt(maxCapacity)
       Cell(capacity = capacity, green = 0, red = 0)
