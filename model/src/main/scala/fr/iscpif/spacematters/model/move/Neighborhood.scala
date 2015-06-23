@@ -16,7 +16,7 @@
  */
 package fr.iscpif.spacematters.model.move
 
-import fr.iscpif.schelling.quantity._
+
 import fr.iscpif.spacematters.model.{Position, State}
 
 trait Neighborhood {

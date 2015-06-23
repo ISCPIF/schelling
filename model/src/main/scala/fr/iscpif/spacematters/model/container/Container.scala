@@ -24,20 +24,27 @@ trait Container {
 
   def size : Int
 
-  var values : Seq[Seq[Cell]]
-
   def container(implicit rng: Random): Seq[Seq[Cell]]
 
-  def printContainer: Unit = {
-    values.foreach(
+
+
+  /**
+   * Stringify just to check validity of generators ; has no sense in general context as a new instance will be randomly generated at each
+   * call of container.
+   *
+   * @return
+   */
+  override def toString: String = {
+    var res = ""
+    container(new Random).foreach(
       (row : Seq[Cell]) => {
           row.foreach(
-            (c : Cell) => {print(c.capacity);print(" | ")}
+            (c : Cell) => {res = res +c.capacity+" | "}
           )
-          println()
+          res = res + "\n"
        }
     )
-
+    res
   }
 
 

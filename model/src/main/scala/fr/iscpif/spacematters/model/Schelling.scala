@@ -16,10 +16,8 @@
  */
 package fr.iscpif.spacematters.model
 
-import fr.iscpif.schelling.quantity.initial._
-import fr.iscpif.schelling.quantity.move._
 import fr.iscpif.spacematters.model.initial.InitialState
-import fr.iscpif.spacematters.model.move.Moves
+import fr.iscpif.spacematters.model.move._
 
 import scala.util.Random
 

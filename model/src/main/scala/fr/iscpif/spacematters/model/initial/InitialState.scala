@@ -16,7 +16,6 @@
  */
 package fr.iscpif.spacematters.model.initial
 
-import fr.iscpif.schelling.quantity._
 import fr.iscpif.spacematters.model.State
 import scala.util.Random
 

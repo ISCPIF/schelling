@@ -22,11 +22,6 @@ trait PrefAttDiffusionContainer <: Container {
 
 
 
-    var values : Seq[Seq[Cell]] = null
-
-
-
-
   /**
    *
    * @param rng
@@ -78,8 +73,8 @@ trait PrefAttDiffusionContainer <: Container {
         //println("population : "+population)
       }
 
-      values = Seq.tabulate(size,size){(i:Int,j:Int)=>Cell(arrayVals(i)(j).capacity,0,0) }
-      values
+      Seq.tabulate(size,size){(i:Int,j:Int)=>Cell(arrayVals(i)(j).capacity,0,0) }
+
 
     }
 
