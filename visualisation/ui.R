@@ -61,7 +61,7 @@ shinyUI(fluidPage(
              Parameters are set with a Sobol suite"
              ),
       tabPanel("Sensitivity Analysis",
-               h3("Sensitivity of segregation to Tolerance level"),
+               h3("Sensitivity of segregation measures to parameter values"),
                fluidRow(column(6,
                       selectInput("index", label = "Segregation Index",
                                   choices = c("Moran's I" = "moran",
