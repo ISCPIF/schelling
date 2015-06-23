@@ -1,9 +1,10 @@
-package fr.iscpif.schelling.quantity.test
+package fr.iscpif.spacematters.model.test
 
-import fr.iscpif.schelling.quantity.Schelling
-import fr.iscpif.schelling.quantity.initial._
-import fr.iscpif.schelling.quantity.move._
-import fr.iscpif.schelling.quantity.stop._
+import fr.iscpif.spacematters.model._
+import fr.iscpif.spacematters.model.container._
+import fr.iscpif.spacematters.model.initial._
+import fr.iscpif.spacematters.model.move._
+import fr.iscpif.spacematters.model.stop._
 
 import scala.util.Random
 

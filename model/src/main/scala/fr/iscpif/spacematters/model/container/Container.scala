@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.schelling.quantity.initial
+package fr.iscpif.spacematters.model.container
 
-import fr.iscpif.schelling.quantity._
+import fr.iscpif.spacematters.model.Cell
 
 import scala.util.Random
 

@@ -1,6 +1,4 @@
-package fr.iscpif.schelling.quantity.initial
-
-import fr.iscpif.schelling.quantity.Cell
+package fr.iscpif.spacematters.model.container
 
 import scala.util.Random
 
