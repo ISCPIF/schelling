@@ -14,17 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.schelling.quantity
+package fr.iscpif.schelling.quantity.initial
 
-object Cell {
-  val empty = Cell(0, 0, 0)
-}
+import fr.iscpif.schelling.quantity._
 
-case class Cell(capa: Double, green: Int, red: Int) {
+import scala.util.Random
 
-  var capacity = capa
+trait Container {
 
-  def isFull = population >= capacity
-  def isEmpty = population <= 0
-  def population = red + green
+  def size : Int
+
+  var values : Seq[Seq[Cell]]
+
+  def container(implicit rng: Random): Seq[Seq[Cell]]
+
+  def printContainer: Unit = {
+    values.foreach(
+      (row : Seq[Cell]) => {
+          row.foreach(
+            (c : Cell) => {print(c.capacity);print(" | ")}
+          )
+          println()
+       }
+    )
+
+  }
+
+
 }
