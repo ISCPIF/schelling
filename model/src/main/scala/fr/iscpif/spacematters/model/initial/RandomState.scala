@@ -52,6 +52,6 @@ trait RandomState <: InitialState with Container { self: Schelling =>
       }
 
     fill(reservoir)
-    State(builder)
+    Matrix(builder)
   }
 }

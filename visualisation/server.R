@@ -5,139 +5,71 @@ library(ggplot2)
 library(reshape2)
 library(grid)
 library(lattice)
-library(corrplot)
 
-rquery.cormat<-function(x,
-                        type=c('lower', 'upper', 'full', 'flatten'),
-                        graph=TRUE,
-                        graphType=c("correlogram", "heatmap"),
-                        col=NULL, ...)
-{
-  library(corrplot)
-  # Helper functions
-  #+++++++++++++++++
-  # Compute the matrix of correlation p-values
-  cor.pmat <- function(x, ...) {
-    mat <- as.matrix(x)
-    n <- ncol(mat)
-    p.mat<- matrix(NA, n, n)
-    diag(p.mat) <- 0
-    for (i in 1:(n - 1)) {
-      for (j in (i + 1):n) {
-        tmp <- cor.test(mat[, i], mat[, j], ...)
-        p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
-      }
-    }
-    colnames(p.mat) <- rownames(p.mat) <- colnames(mat)
-    p.mat
-  }
-  # Get lower triangle of the matrix
-  getLower.tri<-function(mat){
-    upper<-mat
-    upper[upper.tri(mat)]<-""
-    mat<-as.data.frame(upper)
-    mat
-  }
-  # Get upper triangle of the matrix
-  getUpper.tri<-function(mat){
-    lt<-mat
-    lt[lower.tri(mat)]<-""
-    mat<-as.data.frame(lt)
-    mat
-  }
-  # Get flatten matrix
-  flattenCorrMatrix <- function(cormat, pmat) {
-    ut <- upper.tri(cormat)
-    data.frame(
-      row = rownames(cormat)[row(cormat)[ut]],
-      column = rownames(cormat)[col(cormat)[ut]],
-      cor  =(cormat)[ut],
-      p = pmat[ut]
-    )
-  }
-  # Define color
-  if (is.null(col)) {
-    col <- colorRampPalette(
-      c("#67001F", "#B2182B", "#D6604D", "#F4A582",
-        "#FDDBC7", "#FFFFFF", "#D1E5F0", "#92C5DE", 
-        "#4393C3", "#2166AC", "#053061"))(200)
-    col<-rev(col)
-  }
-  
-  # Correlation matrix
-  cormat<-signif(cor(x, use = "complete.obs", ...),2)
-  pmat<-signif(cor.pmat(x, ...),2)
-  # Reorder correlation matrix
-  ord<-corrMatOrder(cormat, order="hclust")
-  cormat<-cormat[ord, ord]
-  pmat<-pmat[ord, ord]
-  # Replace correlation coeff by symbols
-  sym<-symnum(cormat, abbr.colnames=FALSE)
-  # Correlogram
-  if(graph & graphType[1]=="correlogram"){
-    corrplot(cormat, type=ifelse(type[1]=="flatten", "lower", type[1]),
-             tl.col="black", tl.srt=45,col=col,...)
-  }
-  else if(graphType[1]=="heatmap")
-    heatmap(cormat, col=col, symm=TRUE)
-  # Get lower/upper triangle
-  if(type[1]=="lower"){
-    cormat<-getLower.tri(cormat)
-    pmat<-getLower.tri(pmat)
-  }
-  else if(type[1]=="upper"){
-    cormat<-getUpper.tri(cormat)
-    pmat<-getUpper.tri(pmat)
-    sym=t(sym)
-  }
-  else if(type[1]=="flatten"){
-    cormat<-flattenCorrMatrix(cormat, pmat)
-    pmat=NULL
-    sym=NULL
-  }
-  list(r=cormat, p=pmat, sym=sym)
-}
-    
-    
-summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=TRUE,
-                      conf.interval=.95, .drop=TRUE) {
-  library(plyr)
-  
-  # New version of length which can handle NA's: if na.rm==T, don't count them
-  length2 <- function (x, na.rm=FALSE) {
-    if (na.rm) sum(!is.na(x))
-    else       length(x)
-  }
-  
-  # This does the summary. For each group's data frame, return a vector with
-  # N, mean, and sd
-  datac <- ddply(data, groupvars, .drop=.drop,
-                 .fun = function(xx, col) {
-                   c(N    = length2(xx[[col]], na.rm=na.rm),
-                     mean = mean   (xx[[col]], na.rm=na.rm),
-                     sd   = sd     (xx[[col]], na.rm=na.rm)
-                   )
-                 },
-                 measurevar
-  )
-  
-  # Rename the "mean" column    
-  datac <- rename(datac, c("mean" = measurevar))
-  
-  datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
-  
-  # Confidence interval multiplier for standard error
-  # Calculate t-statistic for confidence interval: 
-  # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
-  ciMult <- qt(conf.interval/2 + .5, datac$N-1)
-  datac$ci <- datac$se * ciMult
-  
-  return(datac)
+readgrids = function(x){
+  density = read.delim(x, sep=",", dec=".", header=F)
+  indices = as.data.frame(density[1,1:4])
+  colnames(indices) = c("Rank-size slope","Moran's I","Average distance","Entropy")
+  return(indices)
 }
 shinyServer(function(input, output) {
+  values <- reactiveValues(ngrid= 'none')
+  
   resultFile <- reactiveValues(pathmacro= "data/resultmacro.csv", pathmicro= "data/resultmicro.csv")
   resultTable <- reactiveValues(datamacro = NULL, datamicro = NULL)
- 
+  
+  allGrids <- reactive({
+    allgridfiles = list.files("data/densityGrids",full=TRUE)
+    allgrids = lapply(allgridfiles,  readgrids)
+    gridTable = data.frame()
+    for (i in 1:length(allgridfiles)) gridTable = rbind(gridTable,allgrids[[i]])
+    gridTable = as.matrix(gridTable)
+    gridTable[!is.finite(gridTable)] <- NA
+    gridTable = as.data.frame(gridTable)
+    cut = strsplit(allgridfiles, "[/]")
+    ID = as.numeric(lapply(cut, '[[', 3))
+    gridTable = cbind(ID, gridTable)
+    gridTable <-   gridTable[order(gridTable[,"ID"]),]
+    return(gridTable)
+  })
+  
+  
+  output$gridresults <- renderDataTable({
+    tab = allGrids()
+    tab = round(tab,3)
+    return(tab)
+  },options = list(pageLength = 10), )
+  
+  output$summarygrids <- renderTable({
+    tab = allGrids()
+    summary = summary(tab)[,-1]
+    return(summary)
+  })
+  
+  
+  output$indicesgrid <- renderTable({
+    ngrid =  paste("data/densityGrids/",input$ngrid, sep="")
+    indices = readgrids(ngrid)
+    return(indices)
+  })
+  
+  output$map_density <- renderPlot({
+    density = read.delim(paste("data/densityGrids/", input$ngrid, sep=""), sep=",", dec=".", header=F)
+    grid = as.matrix(density[-1,])
+    cap_palette <- colorRampPalette(c("white", "black"))(n = 299)
+    size <- dim(grid)[[1]]
+    
+    mapDensity <- levelplot(grid, 
+                        col.regions=cap_palette, 
+                        colorkey=T ,
+                        xlab="", ylab="",
+                        cex.axis=0.1,
+                        scales=list(x=list(at=c(0,size+1)), y=list(at=c(0,size+1))
+                        )
+    )
+    
+    return(mapDensity)
+    })
   
   output$map_cell <- renderPlot({
     inMicroFile <- input$file1  
@@ -233,27 +165,14 @@ output$measurestable <- renderTable({
  return(currentstep)
 },digits = 3)
 
-resultschelling <-reactive({
-  data <- read.csv("data/schelling_sims.csv", sep=",", dec=".", header=T)
-  return(data)
+densityGrid <-reactive({
+  grid <- read.csv(paste("data/densityGrids/", nGrid, ".csv", sep=""), sep=",", dec=".", header=T)
+  return(grid)
 })
 
-sensitivityplots <-reactive({
-df <- resultschelling()
-index = input$index
-param = input$param
-bins = input$bins
-segregation <- df[,c("step","greenRatio", "redRatio","similarWanted", 
-                     "dissimilarity", "moran","exposureRedGreen",
-                     "entropy","isolationRedGreen","unsatisfiedRatio")]
-segregation$Tolerance <- 1 - segregation$similarWanted
-segregation$ToleranceLevel <- cut(x=segregation$Tolerance, 0:bins / bins)  
-segregation$Vacancy <- 1 - segregation$greenRatio - segregation$redRatio
-segregation$VacancyRate <- cut(x=segregation$Vacancy, 0:bins / bins)
-segregation$segregationIndex = segregation[,index]
-segregation$Parameter = segregation[,param]
-segregation = subset(segregation, step < 200)
-return(segregation)
+gridPlots <-reactive({
+df <- densityGrid()
+return(gridplot)
 })
 
 

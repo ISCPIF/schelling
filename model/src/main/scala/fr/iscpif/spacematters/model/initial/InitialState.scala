@@ -16,7 +16,8 @@
  */
 package fr.iscpif.spacematters.model.initial
 
-import fr.iscpif.spacematters.model.State
+
+import fr.iscpif.spacematters.model._
 import scala.util.Random
 
 trait InitialState {

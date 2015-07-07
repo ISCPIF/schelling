@@ -16,7 +16,8 @@
  */
 package fr.iscpif.spacematters.model
 
-import fr.iscpif.spacematters.model.initial.InitialState
+
+import fr.iscpif.spacematters.model.initial._
 import fr.iscpif.spacematters.model.move._
 
 import scala.util.Random
@@ -42,7 +43,7 @@ trait Schelling <: InitialState with Moves {
       builder(destination._1)(destination._2) = color.cellColor.modify(_ + 1)(destinationCell)
     }
 
-    State(builder)
+    Matrix(builder)
   }
 
   def states(implicit rng: Random) = Iterator.iterate(initialState)(step)

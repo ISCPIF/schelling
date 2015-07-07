@@ -28,6 +28,20 @@ shinyUI(fluidPage(
   ),
   mainPanel(
     tabsetPanel(
+      tabPanel("Density Grids",
+               
+               fluidRow(
+                 h3("Spatial Distribution of Density Grids"),
+                 column(6,
+                        sliderInput("ngrid", label = "Grid ID",
+                                    min = 0, max = 758, value = 0, step = 1, animate=T))
+               ),
+               plotOutput("map_density"),
+               tableOutput("indicesgrid"),
+               h3("Explore Density Grids' Features"),
+               dataTableOutput("gridresults"),
+               "Summary :",
+               tableOutput("summarygrids")),
       tabPanel("Schelling Map",
 
               fluidRow(
@@ -47,45 +61,8 @@ shinyUI(fluidPage(
              ),
              plotOutput("map_cell"),
             h3("Segregation measures"),
-            tableOutput("measurestable")),
-      tabPanel("Selection of Indicators",
-             h3("Measures correlation"),
-             plotOutput("plotindexes"),
-             h3("Redundant measures :"),
-             "Entropy (with dissimilarity), IsolationGreen (with ExposureGreenToRed),
-             IsolationRed (with ExposureRedToGreen), DeltaGreenRed (with dissimilarity),
-             ExposureGreenRed (with ExposureRedToGreen and DeltaRedGreen), DeltaRedGreen (with dissimilarity)",
-             h3("Selected measures' correlation :"),
-             plotOutput("plotindexes2"),
-             "Correlations are computed over 23550 runs of a schelling model.
-             Parameters are set with a Sobol suite"
-             ),
-      tabPanel("Sensitivity Analysis",
-               h3("Sensitivity of segregation measures to parameter values"),
-               fluidRow(column(6,
-                      selectInput("index", label = "Segregation Index",
-                                  choices = c("Moran's I" = "moran",
-                                              "Dissimilarity" = "dissimilarity",
-                                              "Exposure of Reds to Greens" = "exposureRedGreen",
-                                              "Entropy"="entropy",
-                                              "Isolation of Reds" ="isolationRedGreen",
-                                              "Share of Unsatisfied"="unsatisfiedRatio"
-                                  ), selected = "moran")),
-                      column(6,
-                             selectInput("param", label = "Sensitivity to Parameter",
-                                         choices = c("Tolerance Level" = "ToleranceLevel",
-                                                     "Vacancy Rate" = "VacancyRate"
-                                         ), selected = "ToleranceLevel")),
-                      column(6,
-                             sliderInput("bins", label = "Number of bins for the parameter",
-                                         min = 2, max = 100, value = 10, step = 1))
-      ),
-              
-#                plotOutput("sensitivity1"),
-plotOutput("sensitivity2"),
-tableOutput("test"),
-dataTableOutput("sensitivity")
-      )
+            tableOutput("measurestable"))
+
   
     
 ))

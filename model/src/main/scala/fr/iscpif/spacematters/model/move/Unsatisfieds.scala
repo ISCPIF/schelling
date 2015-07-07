@@ -16,8 +16,8 @@
  */
 package fr.iscpif.spacematters.model.move
 
+import fr.iscpif.spacematters.model._
 
-import fr.iscpif.spacematters.model.{Position, State, Color}
 
 case class Unsatisfied(position: Position, color: Color, number: Int)
 

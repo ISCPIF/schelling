@@ -7,6 +7,7 @@ import move._
 import metric._
 import stop._
 import container._
+import metric.Moran
 
 import scalax.io.Resource
 
@@ -49,7 +50,7 @@ object Simulation extends App {
     (state, step) <- simulation.states.take(100).zipWithIndex
   } {
     def unsatisfied = simulation.unsatisfieds(state).map(_.number).sum
-    println(s"Step $step: # of unsatisfied: $unsatisfied, Dissimilarity D: ${"%.3f".format(dissimilarity(state, Green, Red))}, Moran I Red: ${"%.3f".format(moran(state, Red))}, Entropy H: ${"%.3f".format(entropy(state, Green, Red))}, Exposure Reds to Greens :${"%.3f".format(exposureOfColor1ToColor2(state, Red, Green))}, Isolation Reds :${"%.3f".format(isolation(state, Red, Green))}, Concentration Greens : ${"%.3f".format(delta(state, Green, Red))}")
+    println(s"Step $step: # of unsatisfied: $unsatisfied, Dissimilarity D: ${"%.3f".format(dissimilarity(state, Green, Red))}, Moran I Red: ${"%.3f".format(Moran.colorRatioMoran(state, Red))}, Entropy H: ${"%.3f".format(segregationEntropy(state, Green, Red))}, Exposure Reds to Greens :${"%.3f".format(exposureOfColor1ToColor2(state, Red, Green))}, Isolation Reds :${"%.3f".format(isolation(state, Red, Green))}, Concentration Greens : ${"%.3f".format(delta(state, Green, Red))}")
 
     for { (position @ (i, j), c) <- state.cells } {
       def agents = Color.all.map(_.cellColor.get(c)).mkString(",")
@@ -65,7 +66,7 @@ object Simulation extends App {
     val similarWanted = simulation.similarWanted
 
     output2.append(
-      s"""$step, $unsatisfied,${dissimilarity(state, Green, Red)}, ${moran(state, Red)}, ${entropy(state, Green, Red)}, ${exposureOfColor1ToColor2(state, Red, Green)},${exposureOfColor1ToColor2(state, Green, Red)}, ${isolation(state, Red, Green)}, ${isolation(state, Green, Red)},${delta(state, Red, Green)},${delta(state, Green, Red)}, $size, $greenRatio,$redRatio, $maxCapacity, $similarWanted\n""".stripMargin)
+      s"""$step, $unsatisfied,${dissimilarity(state, Green, Red)}, ${Moran.colorRatioMoran(state, Red)}, ${segregationEntropy(state, Green, Red)}, ${exposureOfColor1ToColor2(state, Red, Green)},${exposureOfColor1ToColor2(state, Green, Red)}, ${isolation(state, Red, Green)}, ${isolation(state, Green, Red)},${delta(state, Red, Green)},${delta(state, Green, Red)}, $size, $greenRatio,$redRatio, $maxCapacity, $similarWanted\n""".stripMargin)
 
   }
 

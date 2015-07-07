@@ -16,8 +16,7 @@
  */
 package fr.iscpif.spacematters.model.move
 
-import fr.iscpif.spacematters.model.{Position, State, Color}
-
+import fr.iscpif.spacematters.model._
 import scala.util.Random
 
 case class Move(color: Color, origin: Position, destination: Position)
