@@ -19,7 +19,7 @@ shinyServer(function(input, output) {
   resultTable <- reactiveValues(datamacro = NULL, datamicro = NULL)
   
   allGrids <- reactive({
-    allgridfiles = list.files("data/densityGrids",full=TRUE)
+    allgridfiles = list.files("data/densityGrids2",full=TRUE)
     allgrids = lapply(allgridfiles,  readgrids)
     gridTable = data.frame()
     for (i in 1:length(allgridfiles)) gridTable = rbind(gridTable,allgrids[[i]])
@@ -48,13 +48,13 @@ shinyServer(function(input, output) {
   
   
   output$indicesgrid <- renderTable({
-    ngrid =  paste("data/densityGrids/",input$ngrid, sep="")
+    ngrid =  paste("data/densityGrids2/",input$ngrid, sep="")
     indices = readgrids(ngrid)
     return(indices)
   })
   
   output$map_density <- renderPlot({
-    density = read.delim(paste("data/densityGrids/", input$ngrid, sep=""), sep=",", dec=".", header=F)
+    density = read.delim(paste("data/densityGrids2/", input$ngrid, sep=""), sep=",", dec=".", header=F)
     grid = as.matrix(density[-1,])
     cap_palette <- colorRampPalette(c("white", "black"))(n = 299)
     size <- dim(grid)[[1]]
@@ -166,7 +166,7 @@ output$measurestable <- renderTable({
 },digits = 3)
 
 densityGrid <-reactive({
-  grid <- read.csv(paste("data/densityGrids/", nGrid, ".csv", sep=""), sep=",", dec=".", header=T)
+  grid <- read.csv(paste("data/densityGrids2/", nGrid, ".csv", sep=""), sep=",", dec=".", header=T)
   return(grid)
 })
 

@@ -34,7 +34,7 @@ shinyUI(fluidPage(
                  h3("Spatial Distribution of Density Grids"),
                  column(6,
                         sliderInput("ngrid", label = "Grid ID",
-                                    min = 0, max = 758, value = 0, step = 1, animate=T))
+                                    min = 0, max = 2033, value = 0, step = 1, animate=T))
                ),
                plotOutput("map_density"),
                tableOutput("indicesgrid"),
