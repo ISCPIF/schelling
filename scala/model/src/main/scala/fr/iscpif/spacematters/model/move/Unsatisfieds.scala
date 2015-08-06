@@ -18,6 +18,7 @@ package fr.iscpif.spacematters.model.move
 
 import fr.iscpif.spacematters.model._
 
+
 case class Unsatisfied(position: Position, color: Color, number: Int)
 
 trait Unsatisfieds <: Neighborhood {

@@ -17,18 +17,18 @@
 package fr.iscpif.spacematters.model.initial
 
 import fr.iscpif.spacematters.model._
+import fr.iscpif.spacematters.model.container._
 
 import scala.util.Random
 
-trait RandomState <: InitialState { self: Schelling =>
+trait RandomState <: InitialState with Container { self: Schelling =>
 
   def maxCapacity: Int
 
   def initialState(implicit rng: Random) = {
-    val cells = Seq.fill(size, size) {
-      val capacity = rng.nextInt(maxCapacity)
-      Cell(capacity = capacity, green = 0, red = 0)
-    }
+
+
+    val cells = container(rng)
 
     val totalCapacity = cells.flatten.map(_.capacity).sum
     val greens = (totalCapacity * greenRatio).toInt

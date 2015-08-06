@@ -17,7 +17,6 @@
 package fr.iscpif.spacematters.model.stop
 
 import fr.iscpif.spacematters.model._
-
 import scala.util.{ Random, Try }
 
 trait SpeilmanStop <: Schelling {

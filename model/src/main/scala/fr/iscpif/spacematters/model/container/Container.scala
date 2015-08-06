@@ -14,17 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.iscpif.spacematters.model
+package fr.iscpif.spacematters.model.container
 
-object Cell {
-  val empty = Cell(0, 0, 0)
-}
+import fr.iscpif.spacematters.model.Cell
 
-case class Cell(capa: Double, green: Int, red: Int) {
+import scala.util.Random
 
-  var capacity = capa
+trait Container {
 
-  def isFull = population >= capacity
-  def isEmpty = population <= 0
-  def population = red + green
+  def size : Int
+
+  def container(implicit rng: Random): Seq[Seq[Cell]]
+
+
+
+  /**
+   * Stringify just to check validity of generators ; has no sense in general context as a new instance will be randomly generated at each
+   * call of container.
+   *
+   * @return
+   */
+  override def toString: String = {
+    var res = ""
+    container(new Random).foreach(
+      (row : Seq[Cell]) => {
+          row.foreach(
+            (c : Cell) => {res = res +c.capacity+" | "}
+          )
+          res = res + "\n"
+       }
+    )
+    res
+  }
+
+
 }
