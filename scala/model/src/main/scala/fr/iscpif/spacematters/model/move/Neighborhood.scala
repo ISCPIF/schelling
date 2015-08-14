@@ -16,7 +16,6 @@
  */
 package fr.iscpif.spacematters.model.move
 
-
 import fr.iscpif.spacematters.model._
 
 trait Neighborhood {

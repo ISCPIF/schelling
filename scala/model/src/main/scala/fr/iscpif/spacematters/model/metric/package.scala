@@ -190,16 +190,13 @@ package object metric {
       if i != oi || j != oj
     } yield state(i + oi)(j + oj)
 
-
-
-
   /**
    * Moran index using fast convolution.
    *
    * @param matrix
    * @return
    */
-  def moran_convol(matrix: Matrix[T],quantity: Quantity[T]): Double = {
+  def moran_convol(matrix: Matrix[T], quantity: Quantity[T]): Double = {
     val conf = matrix.map { row => row.map(quantity).toArray }.toArray
     val n = conf.length
     val flatConf = conf.flatten
@@ -221,7 +218,7 @@ package object metric {
    * @param matrix
    * @return
    */
-  def distance_convol(matrix: Matrix[T],quantity: Quantity[T]): Double = {
+  def distance_convol(matrix: Matrix[T], quantity: Quantity[T]): Double = {
     val conf = matrix.map { row => row.map(quantity).toArray }.toArray
     val totPop = conf.flatten.sum
     val dmat = distanceMatrix(2 * conf.length - 1)
@@ -238,10 +235,5 @@ package object metric {
   def distanceMatrix(n: Int): Array[Array[Double]] = {
     Array.tabulate(n, n) { (i, j) => Math.sqrt((i - n / 2) * (i - n / 2) + (j - n / 2) * (j - n / 2)) }
   }
-
-
-
-
-
 
 }

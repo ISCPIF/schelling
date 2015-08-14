@@ -24,7 +24,7 @@ object Simulation extends App {
     override def maxCapacity: Int = 50
     override def similarWanted: Double = 0.4
 
-/*
+    /*
     override def totalCapacity :Double = 50000
     override def diffusion : Double = 0.02
     override def diffusionSteps : Int = 2

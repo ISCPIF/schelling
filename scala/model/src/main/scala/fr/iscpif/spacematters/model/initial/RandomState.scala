@@ -27,7 +27,6 @@ trait RandomState <: InitialState with Container { self: Schelling =>
 
   def initialState(implicit rng: Random) = {
 
-
     val cells = container(rng)
 
     val totalCapacity = cells.flatten.map(_.capacity).sum

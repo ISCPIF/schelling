@@ -16,7 +16,6 @@
  */
 package fr.iscpif.spacematters.model
 
-
 import fr.iscpif.spacematters.model.initial._
 import fr.iscpif.spacematters.model.move._
 
