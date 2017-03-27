@@ -18,7 +18,9 @@ package fr.iscpif.spacematters.model
 
 import fr.iscpif.spacematters.model.move.Neighborhood
 import org.apache.commons.math3.stat.regression.SimpleRegression
+import org.apache.commons.math3.util.MathArrays
 import fr.iscpif.spacematters.model._
+import fr.iscpif.spacematters.model.Matrix
 import math._
 
 package object metric {
@@ -196,7 +198,7 @@ package object metric {
    * @param matrix
    * @return
    */
-  def moran_convol(matrix: Matrix[T], quantity: Quantity[T]): Double = {
+  def moran_convol[T](matrix: Matrix[T], quantity: Quantity[T]): Double = {
     val conf = matrix.map { row => row.map(quantity).toArray }.toArray
     val n = conf.length
     val flatConf = conf.flatten
@@ -218,7 +220,7 @@ package object metric {
    * @param matrix
    * @return
    */
-  def distance_convol(matrix: Matrix[T], quantity: Quantity[T]): Double = {
+  def distance_convol[T](matrix: Matrix[T], quantity: Quantity[T]): Double = {
     val conf = matrix.map { row => row.map(quantity).toArray }.toArray
     val totPop = conf.flatten.sum
     val dmat = distanceMatrix(2 * conf.length - 1)

@@ -1,0 +1,26 @@
+
+;;
+; experiments
+
+
+
+to setup-experiment [initial-pop]
+  
+  set headless? true
+  
+  set initial-population initial-pop
+  
+  
+  setup
+  
+end
+
+
+to run-experiment
+  
+  repeat total-time-steps [
+    go 
+  ]
+  
+end
+

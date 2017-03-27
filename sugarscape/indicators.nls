@@ -1,0 +1,42 @@
+
+
+;;
+; indicators
+
+
+to update-indicators
+  update-lorenz-and-gini
+end
+
+
+
+to update-lorenz-and-gini
+  let num-people count turtles
+  let sorted-wealths sort [sugar] of turtles
+  let total-wealth sum sorted-wealths
+  let wealth-sum-so-far 0
+  let index 0
+  set gini-index-reserve 0
+  set lorenz-points []
+  repeat num-people [
+    set wealth-sum-so-far (wealth-sum-so-far + item index sorted-wealths)
+    set lorenz-points lput ((wealth-sum-so-far / total-wealth) * 100) lorenz-points
+    set index (index + 1)
+    set gini-index-reserve
+      gini-index-reserve +
+      (index / num-people) -
+      (wealth-sum-so-far / total-wealth)
+  ]
+end
+
+
+to-report gini
+  
+  ;; TODO : no static equilibrium but dynamical -> take moving window average ?
+  
+  report (gini-index-reserve / count turtles) * 2
+end
+
+
+
+

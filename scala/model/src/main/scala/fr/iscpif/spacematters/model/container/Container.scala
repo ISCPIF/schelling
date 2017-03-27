@@ -22,11 +22,9 @@ import scala.util.Random
 
 trait Container {
 
-  def size : Int
+  def size: Int
 
   def container(implicit rng: Random): Seq[Seq[Cell]]
-
-
 
   /**
    * Stringify just to check validity of generators ; has no sense in general context as a new instance will be randomly generated at each
@@ -37,15 +35,14 @@ trait Container {
   override def toString: String = {
     var res = ""
     container(new Random).foreach(
-      (row : Seq[Cell]) => {
-          row.foreach(
-            (c : Cell) => {res = res +c.capacity+" | "}
-          )
-          res = res + "\n"
-       }
+      (row: Seq[Cell]) => {
+        row.foreach(
+          (c: Cell) => { res = res + c.capacity + " | " }
+        )
+        res = res + "\n"
+      }
     )
     res
   }
-
 
 }

@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3-1"
 
+libraryDependencies += "org.apache.commons" % "commons-math3" % "3.3"
+
 scalariformSettings
 
 osgiSettings

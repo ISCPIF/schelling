@@ -1,0 +1,19 @@
+
+
+;;
+; main
+
+to go
+  
+  if ticks = total-time-steps [stop]
+  
+  if not any? turtles [stop]
+  
+  regrow-patches
+  
+  live-turtles
+  
+  update-indicators
+  
+  tick
+end

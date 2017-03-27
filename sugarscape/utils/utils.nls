@@ -1,0 +1,13 @@
+
+;;
+; utils
+
+
+
+to-report random-in-range [low high]
+  report low + random (high - low + 1)
+end
+
+to-report random-float-in-range [low high]
+  report low + random (high - low + 1)
+end

@@ -1,0 +1,78 @@
+
+;;
+; setup
+
+
+to setup
+  
+  if headless? = 0 [clear-all]
+  
+  setup-globals
+  setup-patches
+  setup-turtles
+  setup-indicators
+  
+  reset-ticks
+end
+
+
+to setup-globals
+  if maximum-sugar-endowment <= minimum-sugar-endowment [
+    user-message "Oops: the maximum-sugar-endowment must be larger than the minimum-sugar-endowment"
+    stop
+  ]
+  
+  
+  
+  
+end
+
+
+to setup-turtles
+  create-turtles initial-population [ turtle-setup ]
+end
+
+to turtle-setup ;; turtle procedure
+  set color red
+  set shape "circle"
+  move-to one-of patches with [not any? other turtles-here]
+  set sugar random-float-in-range minimum-sugar-endowment maximum-sugar-endowment
+  set metabolism random-float-in-range 1 4
+  set max-age random-in-range 60 100
+  set age 0
+  set vision random-in-range 1 6
+  ;; turtles can look horizontally and vertically up to vision patches
+  ;; but cannot look diagonally at all
+  set vision-points []
+  foreach n-values vision [? + 1]
+  [
+    set vision-points sentence vision-points (list (list 0 ?) (list ? 0) (list 0 (- ?)) (list (- ?) 0))
+  ]
+  run visualization
+end
+
+to setup-patches
+  
+  if setup-capacity-mode = "synthetic-pattern" [
+     generate-synth-pattern 
+  ]
+  
+  if setup-capacity-mode = "file" [
+    file-open "sugar-map.txt"
+    foreach sort patches[ask ?[set max-psugar file-read]]
+    file-close
+  ]
+  
+  ask patches [
+    set max-psugar sp-occupants
+    set psugar max-psugar
+    patch-recolor
+  ]
+  
+end
+
+
+
+to setup-indicators
+  update-lorenz-and-gini
+end
