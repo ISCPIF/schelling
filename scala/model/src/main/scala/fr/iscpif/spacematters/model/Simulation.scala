@@ -17,7 +17,7 @@ object Simulation extends App {
 
   implicit val rng = new Random
 
-  val simulation = new Schelling with RandomState with RandomContainer with RandomMoves with SpeilmanStop {
+ val simulation = new Schelling with RandomState with RandomContainer with RandomMoves with SpeilmanStop {
     override def size: Int = 50
     override def greenRatio: Double = 0.5
     override def redRatio: Double = 0.35
@@ -31,12 +31,11 @@ object Simulation extends App {
     override def growthRate : Int = 100
     override def alphaAtt : Double = 1.1
 */
-
   }
 
-  simulation.run
+  println(simulation.run)
 
-  val dir = "/tmp/"
+  /* val dir = "/tmp/"
 
   val file1 = new File(dir + "resultmicro.csv")
   file1.delete()
@@ -47,14 +46,14 @@ object Simulation extends App {
   val output2 = Resource.fromFile(file2)
 
   for {
-    (state, step) <- simulation.states.take(100).zipWithIndex
+    (state, step) ← simulation.states.take(100).zipWithIndex
   } {
     def unsatisfied = simulation.unsatisfieds(state).map(_.number).sum
     println(s"Step $step: # of unsatisfied: $unsatisfied, Dissimilarity D: ${"%.3f".format(dissimilarity(state, Green, Red))}, Moran I Red: ${"%.3f".format(Moran.colorRatioMoran(state, Red))}, Entropy H: ${"%.3f".format(segregationEntropy(state, Green, Red))}, Exposure Reds to Greens :${"%.3f".format(exposureOfColor1ToColor2(state, Red, Green))}, Isolation Reds :${"%.3f".format(isolation(state, Red, Green))}, Concentration Greens : ${"%.3f".format(delta(state, Green, Red))}")
 
-    for { (position @ (i, j), c) <- state.cells } {
+    for { (position @ (i, j), c) ← state.cells } {
       def agents = Color.all.map(_.cellColor.get(c)).mkString(",")
-      def unsatisfied = Color.all.map { color => simulation.unsatisfied(state, position, color) }.mkString(",")
+      def unsatisfied = Color.all.map { color ⇒ simulation.unsatisfied(state, position, color) }.mkString(",")
       output1.append(
         s"""$step,$i,$j,${c.capacity},$agents,$unsatisfied\n""".stripMargin)
     }
@@ -62,12 +61,11 @@ object Simulation extends App {
     val size = simulation.size
     val greenRatio = simulation.greenRatio
     val redRatio = simulation.redRatio
-    val maxCapacity = simulation.maxCapacity
     val similarWanted = simulation.similarWanted
 
     output2.append(
       s"""$step, $unsatisfied,${dissimilarity(state, Green, Red)}, ${Moran.colorRatioMoran(state, Red)}, ${segregationEntropy(state, Green, Red)}, ${exposureOfColor1ToColor2(state, Red, Green)},${exposureOfColor1ToColor2(state, Green, Red)}, ${isolation(state, Red, Green)}, ${isolation(state, Green, Red)},${delta(state, Red, Green)},${delta(state, Green, Red)}, $size, $greenRatio,$redRatio, $maxCapacity, $similarWanted\n""".stripMargin)
 
-  }
+  }*/
 
 }

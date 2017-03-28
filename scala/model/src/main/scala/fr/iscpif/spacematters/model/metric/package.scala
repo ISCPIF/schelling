@@ -16,6 +16,7 @@
  */
 package fr.iscpif.spacematters.model
 
+import fr.iscpif.spacematters.model.metric.Moran._
 import fr.iscpif.spacematters.model.move.Neighborhood
 import org.apache.commons.math3.stat.regression.SimpleRegression
 import org.apache.commons.math3.util.MathArrays
@@ -33,10 +34,10 @@ package object metric {
 
   def dissimilarity(state: Matrix[Cell], color1: Color, color2: Color): Double = {
     val flatCells = state.matrix.flatten
-    val totalPopulation = Seq(color1, color2).map { color => color -> total(color, flatCells) }.toMap
+    val totalPopulation = Seq(color1, color2).map { color ⇒ color -> total(color, flatCells) }.toMap
 
     flatCells.map {
-      cell =>
+      cell ⇒
         val nbColor1 = color1.cellColor.get(cell)
         val nbColor2 = color2.cellColor.get(cell)
         abs(nbColor1.toDouble / totalPopulation(color1) - nbColor2.toDouble / totalPopulation(color2))
@@ -45,7 +46,7 @@ package object metric {
 
   def segregationEntropy(state: Matrix[Cell], color1: Color, color2: Color): Double = {
     val flatCells = state.matrix.flatten
-    val totalPopulation = Seq(color1, color2).map { color => color -> total(color, flatCells) }.toMap
+    val totalPopulation = Seq(color1, color2).map { color ⇒ color -> total(color, flatCells) }.toMap
     val totalPropColor1 = totalPopulation(color1).toDouble / (totalPopulation(color1).toDouble + totalPopulation(color2).toDouble)
     val totalPropColor2 = totalPopulation(color2).toDouble / (totalPopulation(color1).toDouble + totalPopulation(color2).toDouble)
 
@@ -60,7 +61,7 @@ package object metric {
     val cityEntropy = (totalPropColor1.toDouble * logInversePropColor1.toDouble) + (totalPropColor2.toDouble * logInversePropColor2.toDouble)
 
     flatCells.map {
-      cell =>
+      cell ⇒
         val nbColor1 = color1.cellColor.get(cell)
         val nbColor2 = color2.cellColor.get(cell)
         val cellPop = nbColor1.toDouble + nbColor2.toDouble
@@ -88,11 +89,11 @@ package object metric {
 
   def exposureOfColor1ToColor2(state: Matrix[Cell], color1: Color, color2: Color): Double = {
     val flatCells = state.matrix.flatten
-    val totalPopulation = Seq(color1, color2).map { color => color -> total(color, flatCells) }.toMap
+    val totalPopulation = Seq(color1, color2).map { color ⇒ color -> total(color, flatCells) }.toMap
     val totalPopColor1 = totalPopulation(color1).toDouble
 
     flatCells.map {
-      cell =>
+      cell ⇒
         val nbColor1 = color1.cellColor.get(cell)
         val nbColor2 = color2.cellColor.get(cell)
         val cellPop = nbColor1.toDouble + nbColor2.toDouble
@@ -108,11 +109,11 @@ package object metric {
 
   def isolation(state: Matrix[Cell], color1: Color, color2: Color): Double = {
     val flatCells = state.matrix.flatten
-    val totalPopulation = Seq(color1, color2).map { color => color -> total(color, flatCells) }.toMap
+    val totalPopulation = Seq(color1, color2).map { color ⇒ color -> total(color, flatCells) }.toMap
     val totalPopColor1 = totalPopulation(color1).toDouble
 
     flatCells.map {
-      cell =>
+      cell ⇒
         val nbColor1 = color1.cellColor.get(cell)
         val nbColor2 = color2.cellColor.get(cell)
         val cellPop = nbColor1.toDouble + nbColor2.toDouble
@@ -128,12 +129,12 @@ package object metric {
 
   def delta(state: Matrix[Cell], color1: Color, color2: Color): Double = {
     val flatCells = state.matrix.flatten
-    val totalPopulation = Seq(color1, color2).map { color => color -> total(color, flatCells) }.toMap
+    val totalPopulation = Seq(color1, color2).map { color ⇒ color -> total(color, flatCells) }.toMap
     val totalPopColor1 = totalPopulation(color1).toDouble
     val NCells = flatCells.size
 
     flatCells.map {
-      cell =>
+      cell ⇒
         val nbColor1 = color1.cellColor.get(cell)
 
         abs((nbColor1.toDouble / totalPopColor1.toDouble) - (1 / NCells.toDouble))
@@ -143,7 +144,7 @@ package object metric {
 
   def slope[T](matrix: Matrix[T], quantity: Quantity[T]) = {
     def distribution = matrix.flatten.map(quantity).sorted(Ordering.Double.reverse).filter(_ > 0)
-    def distributionLog = distribution.zipWithIndex.map { case (q, i) => Array(log(i + 1), log(q)) }.toArray
+    def distributionLog = distribution.zipWithIndex.map { case (q, i) ⇒ Array(log(i + 1), log(q)) }.toArray
     val simpleRegression = new SimpleRegression(true)
     simpleRegression.addData(distributionLog)
     (simpleRegression.getSlope(), simpleRegression.getRSquare())
@@ -163,8 +164,8 @@ package object metric {
 
     def numerator =
       (for {
-        (c1, p1) <- matrix.zipWithPosition
-        (c2, p2) <- matrix.zipWithPosition
+        (c1, p1) ← matrix.zipWithPosition
+        (c2, p2) ← matrix.zipWithPosition
       } yield distance(p1, p2) * quantity(c1) * quantity(c2)).sum
 
     def normalisation = matrix.side / math.sqrt(math.Pi)
@@ -176,7 +177,7 @@ package object metric {
     val totalQuantity = matrix.flatten.map(quantity).sum
     assert(totalQuantity > 0)
     matrix.flatten.map {
-      p =>
+      p ⇒
         val quantityRatio = quantity(p) / totalQuantity
         val localEntropy = if (quantityRatio == 0.0) 0.0 else quantityRatio * math.log(quantityRatio)
         assert(!localEntropy.isNaN, s"${quantityRatio} ${math.log(quantityRatio)}")
@@ -186,8 +187,8 @@ package object metric {
 
   def adjacentCells[T: Empty](state: Matrix[T], position: Position, size: Int = 1) =
     for {
-      oi <- -size to size
-      oj <- -size to size
+      oi ← -size to size
+      oj ← -size to size
       (i, j) = position
       if i != oi || j != oj
     } yield state(i + oi)(j + oj)
@@ -238,4 +239,25 @@ package object metric {
     Array.tabulate(n, n) { (i, j) => Math.sqrt((i - n / 2) * (i - n / 2) + (j - n / 2) * (j - n / 2)) }
   }
 
+  case class Analysis(
+    population: Int,
+    unsatisfied: Int,
+    dissimilarity: Double,
+    moran: Double,
+    entropy: Double,
+    exposureRG: Double,
+    isolation: Double,
+    delta: Double)
+
+  def analyse(model: Schelling, state: State) =
+    Analysis(
+      population = state.map { _.map(_.population).sum }.sum,
+      unsatisfied = model.unsatisfieds(state).map(_.number).sum,
+      dissimilarity = dissimilarity(state, Green, Red),
+      moran = colorRatioMoran(state, Red),
+      entropy = segregationEntropy(state, Green, Red),
+      exposureRG = exposureOfColor1ToColor2(state, Red, Green),
+      isolation = isolation(state, Red, Green),
+      delta = delta(state, Green, Red)
+    )
 }

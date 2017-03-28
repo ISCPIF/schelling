@@ -24,8 +24,8 @@ trait Neighborhood {
 
   def neighbors(state: Matrix[Cell], position: Position) =
     for {
-      oi <- -neighborhoodSize to neighborhoodSize
-      oj <- -neighborhoodSize to neighborhoodSize
+      oi ← -neighborhoodSize to neighborhoodSize
+      oj ← -neighborhoodSize to neighborhoodSize
       (i, j) = position
     } yield state(i + oi)(j + oj)
 

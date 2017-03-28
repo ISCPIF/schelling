@@ -1,4 +1,8 @@
 name: visualisation
 account: clementinegeo
+<<<<<<< HEAD
+bundleId: 201791
+=======
 bundleId: 214953
+>>>>>>> 41eaee3a418b3c2c00c33686aa0b9fbc40b1024f
 url: https://clementinegeo.shinyapps.io/visualisation

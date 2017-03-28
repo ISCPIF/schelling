@@ -27,14 +27,14 @@ package object model {
   implicit class SeqOfSeqDecorator[T](s: Seq[Seq[T]]) {
     def flatZipWithIndex =
       for {
-        (l, i) <- s.zipWithIndex
-        (e, j) <- l.zipWithIndex
+        (l, i) ← s.zipWithIndex
+        (e, j) ← l.zipWithIndex
       } yield (i, j) -> e
   }
 
   type State = Matrix[Cell]
   type Position = (Int, Int)
-  type Quantity[T] = T => Double
+  type Quantity[T] = T ⇒ Double
 
   implicit def colorToCellQuantity(c: Color): Quantity[Cell] = c.cellColor.get(_)
   implicit def matrixToSeqOfSeq[T](m: Matrix[T]) = m.matrix

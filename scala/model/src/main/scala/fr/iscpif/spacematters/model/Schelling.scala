@@ -23,26 +23,27 @@ import scala.util.Random
 
 trait Schelling <: InitialState with Moves {
 
-  def size: Int
   def greenRatio: Double
   def redRatio: Double
   def neighborhoodSize = 2
 
   def step(state: State)(implicit rng: Random) = {
 
-    val builder = state.matrix.map(_.toBuffer).toBuffer
+    val builder = state.matrix.map(_.toArray).toArray
 
     for {
-      Move(color, origin, destination) <- rng.shuffle(moves(state))
-      destinationCell = builder(destination._1)(destination._2)
-      if !destinationCell.isFull
-      originCell = builder(origin._1)(origin._2)
+      Move(color, origin, destination) ← rng.shuffle(moves(state))
+      if (origin != destination)
     } {
-      builder(origin._1)(origin._2) = color.cellColor.modify(_ - 1)(originCell)
-      builder(destination._1)(destination._2) = color.cellColor.modify(_ + 1)(destinationCell)
+      val destinationCell = builder(destination._1)(destination._2)
+      val originCell = builder(origin._1)(origin._2)
+      if (!destinationCell.isFull) {
+        builder(origin._1)(origin._2) = color.cellColor.modify(_ - 1)(originCell)
+        builder(destination._1)(destination._2) = color.cellColor.modify(_ + 1)(destinationCell)
+      }
     }
 
-    Matrix(builder)
+    Matrix(builder.map(_.toSeq).toSeq)
   }
 
   def states(implicit rng: Random) = Iterator.iterate(initialState)(step)

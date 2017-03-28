@@ -22,14 +22,14 @@ object Moran {
 
   def localNeighbourhoodPairs[T: Empty](matrix: Matrix[T]) =
     for {
-      (position, cellI) <- matrix.cells.toIterator
-      cellJ <- adjacentCells(matrix, position)
+      (position, cellI) ← matrix.cells.toIterator
+      cellJ ← adjacentCells(matrix, position)
     } yield (cellI, cellJ, 1.0)
 
-  def distanceDecayNeighbourhoodPairs[T](decay: (Position, Position) => Double)(matrix: Matrix[T]) =
+  def distanceDecayNeighbourhoodPairs[T](decay: (Position, Position) ⇒ Double)(matrix: Matrix[T]) =
     for {
-      (positionI, cellI) <- matrix.cells.toIterator
-      (positionJ, cellJ) <- matrix.cells
+      (positionI, cellI) ← matrix.cells.toIterator
+      (positionJ, cellJ) ← matrix.cells
       if positionI != positionJ
       d = decay(positionI, positionJ)
       if d > 0.0
@@ -42,17 +42,23 @@ object Moran {
       distanceDecayNeighbourhoodPairs[T](1 / distance(_, _))
     )
 
-  def colorRatioMoran(matrix: Matrix[Cell], color: Color) =
-    moran(matrix, (c: Cell) => color.cellColor.get(c) / c.population, localNeighbourhoodPairs[Cell])
+  def colorRatioMoran(matrix: Matrix[Cell], color: Color) = {
+    def quantity(c: Cell) = {
+      if (c.population <= 0) 0.0
+      else color.cellColor.get(c).toDouble / c.population
+    }
 
-  def moran[T](state: Matrix[T], quantity: Quantity[T], neighbors: Matrix[T] => Iterator[(T, T, Double)]): Double = {
+    moran(matrix, quantity, localNeighbourhoodPairs[Cell])
+  }
+
+  def moran[T](state: Matrix[T], quantity: Quantity[T], neighbors: Matrix[T] ⇒ Iterator[(T, T, Double)]): Double = {
     def flatCells = state.matrix.flatten
     val totalQuantity = flatCells.map(quantity).sum
     val averageQuantity = totalQuantity / state.numberOfCells
 
     def numerator =
       neighbors(state).map {
-        case (cellI, cellJ, weight) =>
+        case (cellI, cellJ, weight) ⇒
           val term1 = if (quantity(cellI) == 0) 0.0 else (quantity(cellI) - averageQuantity.toDouble)
           val term2 = if (quantity(cellJ) == 0) 0.0 else (quantity(cellJ) - averageQuantity.toDouble)
           weight * term1 * term2
@@ -60,14 +66,14 @@ object Moran {
 
     def denominator =
       flatCells.map {
-        cell =>
-          if (quantity(cell) == 0) 0
+        cell ⇒
+          if (quantity(cell) <= 0) 0
           else math.pow(quantity(cell) - averageQuantity.toDouble, 2)
       }.sum
 
-    val totalWeight = neighbors(state).map { case (_, _, weight) => weight }.sum
+    val totalWeight = neighbors(state).map { case (_, _, weight) ⇒ weight }.sum
 
-    if (denominator.toDouble == 0) 0
+    if (denominator.toDouble <= 0) 0
     else (state.numberOfCells.toDouble / totalWeight.toDouble) * (numerator / denominator)
   }
 }

@@ -33,8 +33,8 @@ trait Unsatisfieds <: Neighborhood {
 
   def unsatisfieds(state: State): Seq[Unsatisfied] = {
     for {
-      (position, c) <- state.cells
-      color <- Color.all
+      (position, c) ← state.cells
+      color ← Color.all
       if unsatisfied(state, position, color)
     } yield Unsatisfied(position, color, color.cellColor.get(c))
   }

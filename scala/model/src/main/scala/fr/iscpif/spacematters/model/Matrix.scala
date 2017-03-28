@@ -44,7 +44,7 @@ case class Matrix[T](matrix: Seq[Seq[T]]) {
 
   def zipWithPosition: Seq[(T, Position)] =
     for {
-      (row, i) <- matrix.zipWithIndex
-      (content, j) <- row.zipWithIndex
+      (row, i) ← matrix.zipWithIndex
+      (content, j) ← row.zipWithIndex
     } yield content -> (i, j)
 }

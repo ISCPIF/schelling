@@ -24,8 +24,8 @@ case class Move(color: Color, origin: Position, destination: Position)
 trait Moves <: Unsatisfieds {
   def moves(state: State)(implicit rng: Random): Seq[Move] = {
     for {
-      unsatisfied <- unsatisfieds(state)
-      i <- 0 until unsatisfied.number
+      unsatisfied ← unsatisfieds(state)
+      i ← 0 until unsatisfied.number
     } yield Move(unsatisfied.color, unsatisfied.position, destination(state, unsatisfied))
   }
 
