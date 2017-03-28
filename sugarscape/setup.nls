@@ -23,12 +23,19 @@ to setup-globals
     stop
   ]
   
+  set min-metabolism 1
+  set max-metabolism 4
+  set min-death-age 60
+  set max-death-age 100
+  set min-vision 1
+  set max-vision 6
+  
   set total-time-steps 10000
   
 end
 
 to setup-headless
-  
+  set visualization "no-visualization"
 end
 
 
@@ -37,22 +44,7 @@ to setup-turtles
 end
 
 to turtle-setup ;; turtle procedure
-  set color red
-  set shape "circle"
-  move-to one-of patches with [not any? other turtles-here]
-  set sugar random-float-in-range minimum-sugar-endowment maximum-sugar-endowment
-  set metabolism random-float-in-range 1 4
-  set max-age random-in-range 60 100
-  set age 0
-  set vision random-in-range 1 6
-  ;; turtles can look horizontally and vertically up to vision patches
-  ;; but cannot look diagonally at all
-  set vision-points []
-  foreach n-values vision [? + 1]
-  [
-    set vision-points sentence vision-points (list (list 0 ?) (list ? 0) (list 0 (- ?)) (list (- ?) 0))
-  ]
-  run visualization
+  new-turtle
 end
 
 to setup-patches

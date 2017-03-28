@@ -8,7 +8,7 @@ to live-turtles
     turtle-eat
     set age (age + 1)
     if sugar <= 0 or age > max-age [
-      hatch 1 [ turtle-setup ]
+      hatch 1 [ new-turtle ]
       die
     ]
     run visualization
@@ -33,6 +33,22 @@ to turtle-eat ;; turtle procedure
   set psugar 0
 end
 
+
+to new-turtle
+  set color red
+  set shape "circle"
+  set age 0
+  move-to one-of patches with [not any? other turtles-here]
+  set sugar random-float-in-range minimum-sugar-endowment maximum-sugar-endowment
+  set metabolism random-float-in-range min-metabolism max-metabolism
+  set max-age random-in-range min-death-age max-death-age
+  set vision random-in-range min-vision max-vision
+  ;; turtles can look horizontally and vertically up to vision patches
+  ;; but cannot look diagonally at all
+  set vision-points []
+  foreach n-values vision [? + 1][set vision-points sentence vision-points (list (list 0 ?) (list ? 0) (list 0 (- ?)) (list (- ?) 0))]
+  run visualization
+end
 
 
 

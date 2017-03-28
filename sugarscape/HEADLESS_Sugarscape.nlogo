@@ -45,6 +45,26 @@ globals [
   sp-population
   ;sp-max-pop
   
+  ;;
+  ; Headless
+  visualization
+  setup-capacity-mode
+  
+  initial-population
+  maximum-sugar-endowment
+  minimum-sugar-endowment
+  
+  sp-alpha-localization
+  sp-max-pop
+  sp-growth-rate
+  sp-diffusion-steps
+  sp-diffusion
+  
+  synth-center-number
+  synth-max-pop
+  synth-rank-size-exp
+  synth-center-density
+  
   headless?
 ]
 
@@ -68,7 +88,6 @@ patches-own [
   
   
 ]
-
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -97,344 +116,6 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
-
-BUTTON
-10
-135
-90
-175
-NIL
-setup
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-100
-135
-190
-175
-NIL
-go
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-200
-135
-290
-175
-go once
-go
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-CHOOSER
-945
-20
-1115
-65
-visualization
-visualization
-"no-visualization" "color-agents-by-vision" "color-agents-by-metabolism"
-0
-
-PLOT
-720
-10
-925
-140
-Wealth distribution
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" "set-histogram-num-bars 10\nset-plot-x-range 0 (max [sugar] of turtles)\nset-plot-pen-interval ((max [sugar] of turtles) / 10)"
-PENS
-"default" 1.0 1 -16777216 true "" "histogram ([sugar] of turtles)"
-
-SLIDER
-10
-10
-290
-43
-initial-population
-initial-population
-10
-1000
-100
-10
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-50
-290
-83
-minimum-sugar-endowment
-minimum-sugar-endowment
-0
-200
-5
-1
-1
-NIL
-HORIZONTAL
-
-PLOT
-720
-145
-925
-295
-Lorenz curve
-Pop %
-Wealth %
-0.0
-100.0
-0.0
-100.0
-false
-true
-"" ""
-PENS
-"equal" 100.0 0 -16777216 true ";; draw a straight line from lower left to upper right\nset-current-plot-pen \"equal\"\nplot 0\nplot 100" ""
-"lorenz" 1.0 0 -2674135 true "" "plot-pen-reset\nset-plot-pen-interval 100 / count turtles\nplot 0\nforeach lorenz-points plot"
-
-PLOT
-720
-300
-925
-440
-Gini index vs. time
-Time
-Gini
-0.0
-100.0
-0.2
-0.5
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -13345367 true "" "plot (gini-index-reserve / count turtles) * 2"
-"pen-1" 1.0 0 -2674135 true "" "plot moving-window-gini"
-
-SLIDER
-10
-90
-290
-123
-maximum-sugar-endowment
-maximum-sugar-endowment
-0
-200
-58
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-330
-170
-363
-sp-alpha-localization
-sp-alpha-localization
-0
-4
-1.9
-0.1
-1
-NIL
-HORIZONTAL
-
-TEXTBOX
-15
-310
-165
-328
-Synthetic Pattern
-11
-0.0
-1
-
-SLIDER
-5
-365
-170
-398
-sp-max-pop
-sp-max-pop
-0
-10000
-5200
-100
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-400
-170
-433
-sp-growth-rate
-sp-growth-rate
-0
-100
-100
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-435
-170
-468
-sp-diffusion-steps
-sp-diffusion-steps
-0
-5
-1
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-470
-170
-503
-sp-diffusion
-sp-diffusion
-0
-1
-0.1
-0.05
-1
-NIL
-HORIZONTAL
-
-CHOOSER
-10
-200
-167
-245
-setup-capacity-mode
-setup-capacity-mode
-"file" "synthetic-pattern" "kernel-mixture"
-2
-
-SLIDER
-5
-545
-170
-578
-synth-center-number
-synth-center-number
-0
-10
-6
-1
-1
-NIL
-HORIZONTAL
-
-TEXTBOX
-10
-525
-160
-543
-Kernel mixture
-11
-0.0
-1
-
-SLIDER
-5
-580
-170
-613
-synth-max-pop
-synth-max-pop
-0
-1000
-653
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-615
-170
-648
-synth-rank-size-exp
-synth-rank-size-exp
-0
-3
-0.5
-0.1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-5
-650
-170
-683
-synth-center-density
-synth-center-density
-0
-5
-4
-0.5
-1
-NIL
-HORIZONTAL
-
-MONITOR
-230
-505
-347
-550
-patches-capacity
-sum [sp-occupants] of patches
-17
-1
-11
 
 @#$#@#$#@
 ## WHAT IS IT?
