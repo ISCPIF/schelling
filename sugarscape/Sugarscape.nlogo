@@ -12,10 +12,12 @@ __includes [
    "indicators.nls"
    "display.nls"
    "embedded-synth-pattern.nls"
+   "synth-city-system.nls"
    "experiments.nls"
    
    "utils/utils.nls"
    "utils/List.nls"
+   "utils/SpatialKernels.nls"
 ]
 
 
@@ -24,6 +26,8 @@ globals [
   lorenz-points
   
   total-time-steps
+  
+  gini-values
   
   ;;
   ; synthetic pattern globals
@@ -54,7 +58,6 @@ patches-own [
   
   
 ]
-
 
 
 @#$#@#$#@
@@ -223,13 +226,14 @@ Time
 Gini
 0.0
 100.0
-0.0
-1.0
+0.2
+0.5
 true
 false
 "" ""
 PENS
 "default" 1.0 0 -13345367 true "" "plot (gini-index-reserve / count turtles) * 2"
+"pen-1" 1.0 0 -2674135 true "" "plot moving-window-gini"
 
 SLIDER
 10
@@ -339,7 +343,88 @@ CHOOSER
 setup-capacity-mode
 setup-capacity-mode
 "file" "synthetic-pattern" "kernel-mixture"
+2
+
+SLIDER
+5
+545
+170
+578
+synth-center-number
+synth-center-number
+0
+10
+5
 1
+1
+NIL
+HORIZONTAL
+
+TEXTBOX
+10
+525
+160
+543
+Kernel mixture
+11
+0.0
+1
+
+SLIDER
+5
+580
+170
+613
+synth-max-pop
+synth-max-pop
+0
+1000
+407
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+615
+170
+648
+synth-rank-size-exp
+synth-rank-size-exp
+0
+3
+0.5
+0.1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+5
+650
+170
+683
+synth-center-density
+synth-center-density
+0
+5
+4
+0.5
+1
+NIL
+HORIZONTAL
+
+MONITOR
+230
+505
+347
+550
+patches-capacity
+sum [sp-occupants] of patches
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?

@@ -6,6 +6,9 @@
 
 to update-indicators
   update-lorenz-and-gini
+  
+  ; update historical values
+  set gini-values lput gini gini-values
 end
 
 
@@ -30,11 +33,22 @@ to update-lorenz-and-gini
 end
 
 
+;;
+;  gini index
 to-report gini
-  
-  ;; TODO : no static equilibrium but dynamical -> take moving window average ?
-  
   report (gini-index-reserve / count turtles) * 2
+end
+
+;;
+; no static equilibrium but dynamical -> take moving window average ?
+;  : to be compared with average over runs : some kind of check for ergodicity
+;
+;  TODO : would be interesting to look at different time scales implied (link with some kind of spectral study of the model, can we predict them ?)
+;
+to-report moving-window-gini
+  ifelse length gini-values = 0 [report 0][
+    report mean (sublist gini-values (max list 0 (length gini-values - 1000)) (length gini-values))
+  ]
 end
 
 

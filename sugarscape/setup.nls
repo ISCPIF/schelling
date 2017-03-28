@@ -17,13 +17,17 @@ end
 
 
 to setup-globals
+  
   if maximum-sugar-endowment <= minimum-sugar-endowment [
     user-message "Oops: the maximum-sugar-endowment must be larger than the minimum-sugar-endowment"
     stop
   ]
   
+  set total-time-steps 10000
   
-  
+end
+
+to setup-headless
   
 end
 
@@ -54,11 +58,15 @@ end
 to setup-patches
   
   if setup-capacity-mode = "synthetic-pattern" [
-     generate-synth-pattern 
+     generate-synth-pattern
+  ]
+  
+  if setup-capacity-mode = "kernel-mixture" [
+     generate-synth-city-system
   ]
   
   if setup-capacity-mode = "file" [
-    file-open "sugar-map.txt"
+    file-open (word "setup/sugar-map.txt")
     foreach sort patches[ask ?[set max-psugar file-read]]
     file-close
   ]
@@ -74,5 +82,8 @@ end
 
 
 to setup-indicators
+  
   update-lorenz-and-gini
+  
+  set gini-values []
 end

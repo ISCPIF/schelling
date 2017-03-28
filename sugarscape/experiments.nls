@@ -10,6 +10,7 @@ to setup-experiment [initial-pop]
   
   set initial-population initial-pop
   
+  setup-headless
   
   setup
   
