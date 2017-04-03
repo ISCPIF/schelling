@@ -1,5 +1,5 @@
 
-extensions [gradient morphology]
+extensions [morphology]
 
 
 __includes [
@@ -51,7 +51,7 @@ globals [
   setup-capacity-mode
   
   initial-population
-  maximum-sugar-endowment
+  maximum-sugar-endowment ; \in [0,200]
   minimum-sugar-endowment
   
   sp-alpha-localization
@@ -78,8 +78,14 @@ turtles-own [
 ]
 
 patches-own [
-  psugar           ;; the amount of sugar on this patch
-  max-psugar       ;; the maximum amount of sugar that can be on this patch
+  ;; 
+  ; the maximum amount of sugar that can be on this patch = patch capacity
+  max-psugar       
+  
+  ;;
+  ; the amount of sugar on this patch
+  psugar           
+  
   
   ;;
   ; synthetic pattern generation

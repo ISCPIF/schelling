@@ -64,7 +64,7 @@ to setup-patches
   ]
   
   ask patches [
-    set max-psugar sp-occupants
+    if sp-occupants > 0 [set max-psugar sp-occupants]
     set psugar max-psugar
     patch-recolor
   ]

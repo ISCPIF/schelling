@@ -1,0 +1,53 @@
+
+// Parameter
+val population = Val[Double]
+val minSugar = Val[Double]
+val maxSugar = Val[Double]
+
+// setup
+val setup = Val[Int]
+
+val spPopulation = Val[Double]
+val spGrowth = Val[Double]
+val spAlpha = Val[Double]
+val spDiffusion = Val[Double]
+val spDiffsteps = Val[Double]
+
+val syCenters = Val[Double]
+val syMaxPop = Val[Double]
+val syRankSizeExp = Val[Double]
+val syCenterDens = Val[Double]
+
+// Reporters
+val gini = Val[Double]
+val mwgini = Val[Double]
+// morphology
+val moran=Val[Double]
+val distance=Val[Double]
+val entropy=Val[Double]
+val slope=Val[Double]
+val rsquared=Val[Double]
+val moranRessource=Val[Double]
+val distanceRessource=Val[Double]
+val entropyRessource=Val[Double]
+val slopeRessource=Val[Double]
+val rsquaredRessource=Val[Double]
+
+val id = Val[Int]
+val replication = Val[Int]
+
+
+//setup-experiment [initial-pop min-sugar max-sugar setup-mode
+//            sp-pop sp-growth sp-alpha-loc sp-diff sp-diff-steps
+//            sy-centers sy-max-pop sy-rs-exp sy-center-dens]
+
+
+val cmds = List("setup-experiment ${population} ${minSugar} ${maxSugar} ${setup} ${spPopulation} ${spGrowth} ${spAlpha} ${spDiffusion} ${spDiffsteps} ${syCenters} ${syMaxPop} ${syRankSizeExp} ${syCenterDens} ${replication}","run-experiment")
+val model = NetLogo5Task(workDirectory / "HEADLESS_Sugarscape.nlogo", cmds,embedWorkspace = true) set (
+    inputs += (population,minSugar,maxSugar,setup,spPopulation,spGrowth,spAlpha,spDiffusion,spDiffsteps,syCenters,syMaxPop,syRankSizeExp,syCenterDens,replication,id),
+    outputs += (population,minSugar,maxSugar,setup,spPopulation,spGrowth,spAlpha,spDiffusion,spDiffsteps,syCenters,syMaxPop,syRankSizeExp,syCenterDens,replication,id),
+    netLogoOutputs += ("gini", gini),
+    netLogoOutputs += ("moving-window-gini", mwgini),
+    netLogoOutputs += ("moran", moran),netLogoOutputs += ("mean-distance", distance),netLogoOutputs += ("entropy", entropy),netLogoOutputs += ("slope", slope),netLogoOutputs += ("slope-rsquared", rsquared),
+    netLogoOutputs += ("moran-ressource", moranRessource),netLogoOutputs += ("mean-distance-ressource", distanceRessource),netLogoOutputs += ("entropy-ressource", entropyRessource),netLogoOutputs += ("slope-ressource", slopeRessource),netLogoOutputs += ("slope-rsquared-ressource", rsquaredRessource)
+)

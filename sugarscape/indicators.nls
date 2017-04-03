@@ -53,4 +53,47 @@ end
 
 
 
+;;
+; morphological indicators
 
+to-report moran
+  report morphology:moran 0
+end
+
+to-report entropy
+  report morphology:entropy 0
+end
+
+to-report slope
+  report first morphology:slope 0
+end
+
+to-report slope-rsquared
+  report last morphology:slope 0
+end
+
+to-report mean-distance
+  report morphology:distance 0
+end
+
+
+
+to-report moran-ressource
+  report morphology:moran 1
+end
+
+to-report entropy-ressource
+  report morphology:entropy 1
+end
+
+to-report slope-ressource
+  report first morphology:slope 1
+end
+
+to-report slope-rsquared-ressource
+  report last morphology:slope 1
+end
+
+to-report mean-distance-ressource
+  report morphology:distance 1
+end
