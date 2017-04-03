@@ -3,9 +3,13 @@ library(ggplot2)
 
 setwd(paste0(Sys.getenv('CS_HOME'),'/SpaceMatters/spacematters/sugarscape'))
 
-res <- as.tbl(read.csv('exploration/2017_03_28_11_59_36_GRID_SYNTHPATTERN.csv'))
+res <- as.tbl(read.csv('exploration/2017_03_28_gridsynthpattern_nonull.csv'))
+length(which(is.na(res)))
+warnings()
 
 morph = res %>% group_by(id)%>%summarise(distance=mean(distance),entropy=mean(entropy),moran=mean(moran),slope=mean(slope))
+warnings()
+
 for(j in 2:ncol(morph)){morph[,j]<-(morph[,j]-min(morph[,j]))/(max(morph[,j])-min(morph[,j]))}
 pca=prcomp(morph[,2:ncol(morph)])
 rot = data.frame(as.matrix(morph[,2:ncol(morph)])%*%pca$rotation)
