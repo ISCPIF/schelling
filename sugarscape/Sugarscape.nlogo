@@ -69,7 +69,6 @@ patches-own [
   
 ]
 
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 300
@@ -353,7 +352,7 @@ CHOOSER
 setup-capacity-mode
 setup-capacity-mode
 "file" "synthetic-pattern" "kernel-mixture"
-2
+0
 
 SLIDER
 5

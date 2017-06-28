@@ -15,9 +15,11 @@ for(j in 2:ncol(morph)){morph[,j]<-(morph[,j]-min(morph[,j]))/(max(morph[,j])-mi
 pca=prcomp(morph[,2:ncol(morph)])
 rot = data.frame(as.matrix(morph[,2:ncol(morph)])%*%pca$rotation,morph)
 
-write.csv(pca$rotation,file='exploration/20170328_gridsynth_rotation.csv',row.names = T,col.names = T)
+save(pca,file='pca.RData')
 
-write.csv(data.frame(morph$id,rot),file='exploration/20170328_gridsynth_morphopca.csv')
+#write.csv(pca$rotation,file='exploration/20170328_gridsynth_rotation.csv',row.names = T,col.names = T)
+
+#write.csv(data.frame(morph$id,rot),file='exploration/20170328_gridsynth_morphopca.csv')
 
 #sres = res %>% group_by(id,population,minSugar,maxSugar)%>%summarise(
 #  gini=mean(mwgini),spAlpha=mean(spAlpha),spDiffsteps=mean(spDiffsteps),spDiffusion=mean(spDiffusion),spGrowth=mean(spGrowth),spPopulation=mean(spPopulation)

@@ -3,6 +3,15 @@
 ;;
 ; indicators
 
+to compute-indicators
+  show word "moran = " moran
+  show word "entropy = " entropy
+  show word "slope = " slope
+  show word "slope-r2 = " slope-rsquared
+  show word "distance = " mean-distance
+end
+
+
 
 to update-indicators
   update-lorenz-and-gini
