@@ -4,6 +4,7 @@ library(ggplot2)
 setwd(paste0(Sys.getenv('CS_HOME'),'/SpaceMatters/spacematters/sugarscape'))
 
 res <- as.tbl(read.csv('exploration/2017_03_28_gridsynthpattern_nonull.csv'))
+#res <- as.tbl(read.csv('exploration/2017_03_28_11_59_36_GRID_SYNTHPATTERN.csv'))
 length(which(is.na(res)))
 warnings()
 
@@ -12,15 +13,17 @@ warnings()
 
 for(j in 2:ncol(morph)){morph[,j]<-(morph[,j]-min(morph[,j]))/(max(morph[,j])-min(morph[,j]))}
 pca=prcomp(morph[,2:ncol(morph)])
-rot = data.frame(as.matrix(morph[,2:ncol(morph)])%*%pca$rotation)
+rot = data.frame(as.matrix(morph[,2:ncol(morph)])%*%pca$rotation,morph)
 
-write.csv(data.frame(morph$id,rot),file='exploration/20170328_gridsynth_morpho.csv')
+write.csv(pca$rotation,file='exploration/20170328_gridsynth_rotation.csv',row.names = T,col.names = T)
 
-sres = res %>% group_by(id,population,minSugar,maxSugar)%>%summarise(
-  gini=mean(mwgini),spAlpha=mean(spAlpha),spDiffsteps=mean(spDiffsteps),spDiffusion=mean(spDiffusion),spGrowth=mean(spGrowth),spPopulation=mean(spPopulation)
-)
+write.csv(data.frame(morph$id,rot),file='exploration/20170328_gridsynth_morphopca.csv')
 
-write.csv(sres,file='exploration/20170328_gridsynth_sum.csv')
+#sres = res %>% group_by(id,population,minSugar,maxSugar)%>%summarise(
+#  gini=mean(mwgini),spAlpha=mean(spAlpha),spDiffsteps=mean(spDiffsteps),spDiffusion=mean(spDiffusion),spGrowth=mean(spGrowth),spPopulation=mean(spPopulation)
+#)
+
+#write.csv(sres,file='exploration/20170328_gridsynth_sum.csv')
 
 
 # q1 = quantile(rot$PC1,seq(from=0.25,to=1,by=0.25))

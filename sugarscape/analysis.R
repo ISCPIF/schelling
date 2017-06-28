@@ -57,5 +57,50 @@ g+geom_raster()+facet_grid(binpc1~binpc2)
 
 
 
+#####
+# Meta phase diagram with EMD
+
+library(emdist)
+
+sres <- as.tbl(read.csv(file='exploration/20170328_gridsynth_sum.csv'))
+
+ref <- as.tbl(read.csv('exploration/2017_03_28_11_57_40_GRID_FIXED.csv'))
+sref = ref %>% group_by(population,minSugar,maxSugar)%>%summarise(gini=mean(mwgini))
+
+dists=c()
+for(id in unique(sres$id)){
+  show(id)
+  #dists=append(dists,emd(as.matrix(sref[,c(4,1:3)]),as.matrix(sres[sres$id==id,c(6,3:5)])))
+  dists=append(dists,2*sd(sref$gini-sres$gini[sres$id==id])/(sd(sref$gini)+sd(sres$gini[sres$id==id])))
+}
+names(dists)=unique(sres$id)
+  
+morph <- as.tbl(read.csv('exploration/20170328_gridsynth_morpho.csv'))
+names(morph)[2]<-"id"
+
+sres$binpc1=binpc1[as.character(sres$id)]
+sres$binpc2=binpc2[as.character(sres$id)]
+sres$dist=dists[as.character(sres$id)]
+
+metaphase = sres %>% group_by(binpc1,binpc2)%>%summarise(emd=mean(dist))
+
+metaparams = sres %>% group_by(id)%>%summarise(alpha=mean(spAlpha),diffSteps=mean(spDiffsteps),diffusion=mean(spDiffusion),growth=mean(spGrowth))
+
+g=ggplot(metaphase,aes(x=binpc1,y=binpc2,fill=emd))
+g+geom_raster()
+ggsave(file='res/emd_raster.png',width=12,height=10,units = 'cm')
+
+
+g = ggplot(data.frame(morph,dist=dists),aes(x=PC1,y=PC2,color=dist))
+g+geom_point()
+
+g=ggplot(data.frame(metaparams,dist=dists),aes(x=alpha,y=diffusion,color=dist))
+g+geom_point(size=2)
+
+g=ggplot(data.frame(metaparams,dist=dists),aes(x=growth,y=diffusion,color=dist))
+g+geom_point(size=2)
+
+g=ggplot(data.frame(metaparams,dist=dists),aes(x=diffSteps,y=diffusion,color=dist))
+g+geom_point(size=2)
 
 

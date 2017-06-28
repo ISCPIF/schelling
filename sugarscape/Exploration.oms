@@ -7,7 +7,7 @@ import Model._
 // exploration
 val exploration = ExplorationTask (
   (LHS (
-    1,
+    50,
     spPopulation in Range(4000.0,5000.0),
     spGrowth in Range(100.0,500.0),
     spAlpha in Range(0.5,3.0),
@@ -18,22 +18,28 @@ val exploration = ExplorationTask (
     syRankSizeExp in Range(0.3,2.0),
     syCenterDens in Range(3.0,5.0)
     ) withIndex id) x
-     (((setup is 0) x
-     (population is 100.0) x
-     (minSugar is 10.0) x
-     (maxSugar is 100.0)) filter ("minSugar < maxSugar")) x
+     (((setup is 1) x
+     //(population is 100.0) x
+     (population in (10.0 to 510.0 by 50.0)) x
+     //(minSugar is 10.0) x
+     (minSugar in (10.0 to 100.0 by 10.0)) x
+     //(maxSugar is 100.0) x
+     (maxSugar in (110.0 to 200.0 by 10.0))) filter ("minSugar < maxSugar")) x
      (replication in (UniformDistribution[Int]() take 50))
   )
 
 
-val purpose = "TEST_FILTER"
+val purpose = "GRID_SYNTHPATTERN"
+//val purpose = "GRID_FIXED"
 
 // output hook
 val indicshook = AppendToCSVFileHook(workDirectory / "exploration" / ((new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")).format(new Date()))+"_"+purpose+".csv")
 
 // env
-val local = LocalEnvironment(50)
-//val grid = EGIEnvironment("vo.complex-systems.eu")
+//val local = LocalEnvironment(50)
+val grid = EGIEnvironment("vo.complex-systems.eu")
 
-exploration -< (model on local hook indicshook)
-//exploration -< (model on grid by 200 hook indicshook)
+//exploration -< (model on local hook indicshook)
+exploration -< (model on grid by 1000 hook indicshook)
+
+
