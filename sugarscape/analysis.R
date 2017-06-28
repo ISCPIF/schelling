@@ -3,6 +3,12 @@ library(dplyr)
 library(ggplot2)
 
 setwd(paste0(Sys.getenv('CS_HOME'),'/SpaceMatters/spacematters/sugarscape'))
+stdtheme= theme(axis.title = element_text(size = 22), 
+                axis.text.x = element_text(size = 15),axis.text.y = element_text(size = 15),
+                strip.text = element_text(size=15),
+                legend.text=element_text(size=15), legend.title=element_text(size=15))
+
+
 
 # single phase diagram
 
@@ -71,7 +77,9 @@ dists=c()
 for(id in unique(sres$id)){
   show(id)
   #dists=append(dists,emd(as.matrix(sref[,c(4,1:3)]),as.matrix(sres[sres$id==id,c(6,3:5)])))
-  dists=append(dists,2*sd(sref$gini-sres$gini[sres$id==id])/(sd(sref$gini)+sd(sres$gini[sres$id==id])))
+  #show(length(sres$gini[sres$id==id]))
+  d=left_join(sref,sres[sres$id==id,],by=c('population'='population','minSugar'='minSugar','maxSugar'='maxSugar'))
+  dists=append(dists,2*(sd(d$gini.x-d$gini.y,na.rm = T)^2)/(sd(d$gini.x)^2+sd(d$gini.y,na.rm = T)^2))
 }
 names(dists)=unique(sres$id)
   
@@ -91,16 +99,38 @@ g+geom_raster()
 ggsave(file='res/emd_raster.png',width=12,height=10,units = 'cm')
 
 
-g = ggplot(data.frame(morph,dist=dists),aes(x=PC1,y=PC2,color=dist))
-g+geom_point()
+g = ggplot(data.frame(morph,distance=dists),aes(x=PC1,y=PC2,color=distance))
+g+geom_point(size=2)+stdtheme
+ggsave(file='res/relativedistance_morphspace.pdf',width=18,height=15,units = 'cm')
 
-g=ggplot(data.frame(metaparams,dist=dists),aes(x=alpha,y=diffusion,color=dist))
-g+geom_point(size=2)
+g=ggplot(data.frame(metaparams,distance=dists),aes(x=alpha,y=diffusion,color=distance))
+g+geom_point(size=2)+stdtheme
+ggsave(file='res/relativedistance_metaparams.pdf',width=18,height=15,units = 'cm')
+
 
 g=ggplot(data.frame(metaparams,dist=dists),aes(x=growth,y=diffusion,color=dist))
 g+geom_point(size=2)
 
 g=ggplot(data.frame(metaparams,dist=dists),aes(x=diffSteps,y=diffusion,color=dist))
 g+geom_point(size=2)
+
+
+### plot typical phase diagrams
+
+dists[dists<1.1*min(dists)]
+dists[dists>0.9*max(dists)]
+
+g=ggplot(sres[sres$id==27&sres$maxSugar==110,],aes(x=population,y=minSugar,fill=gini))
+g+geom_raster()+stdtheme
+ggsave(file='res/phasediagram_id27_maxSugar110.png',width=18,height=15,units = 'cm')
+data.frame(sres[sres$id==27&sres$maxSugar==110,])
+
+g=ggplot(sres[sres$id==0&sres$maxSugar==110,],aes(x=population,y=minSugar,fill=gini))
+g+geom_raster()+stdtheme
+ggsave(file='res/phasediagram_id0_maxSugar110.png',width=18,height=15,units = 'cm')
+data.frame(sres[sres$id==0&sres$maxSugar==110,])
+
+
+
 
 
