@@ -110,7 +110,7 @@ ggsave(file='res/emd_raster.png',width=12,height=10,units = 'cm')
 rot<-read.csv('20170328_gridsynth_rotation.csv',row.names = 1 )
 matrix(data=c(0.8290054369272968,0.9640148151339423,0.2563323814971014,-0.3742297460724673),nrow=1)%*%as.matrix(rot)
 
-
+load('pca.RData')
 
 # plots
 
