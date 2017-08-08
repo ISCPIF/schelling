@@ -17,12 +17,14 @@ object Simulation extends App {
 
   implicit val rng = new Random
 
- val simulation = new Schelling with RandomState with RandomContainer with RandomMoves with SpeilmanStop {
-    override def size: Int = 50
+  val simulation = new Schelling with RandomState with FileContainer with RandomMoves with SpeilmanStop {
+    override def size: Int = 20
     override def greenRatio: Double = 0.5
     override def redRatio: Double = 0.35
     override def maxCapacity: Int = 50
     override def similarWanted: Double = 0.4
+
+    override def configfile: String = "config/test2.csv"
 
     /*
     override def totalCapacity :Double = 50000

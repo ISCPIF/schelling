@@ -24,5 +24,5 @@ trait CapacityMatrix {
   def capacityGrid(implicit rng: Random): Seq[Seq[Int]]
 
   def capacityMatrix(implicit rng: Random) =
-    capacityGrid.map(_.map(c ⇒ Cell(capacity = c, green = 0, red = 0)))
+    capacityGrid.map(_.map(c ⇒ Cell(capa = c, green = 0, red = 0)))
 }
