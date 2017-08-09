@@ -13,6 +13,8 @@ trait FileContainer <: Container {
 
   def container(implicit rng: Random) = {
 
+    println("initialising from file " + configfile)
+
     val lines = Source.fromFile(configfile).getLines().drop(1).map(_.split(",").map(_.toDouble))
 
     val arrayVals = Array.fill[Cell](size, size) {
