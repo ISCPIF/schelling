@@ -1,0 +1,26 @@
+
+;
+; main
+
+
+to go-until-stop
+  let stopping? false
+  while [not stopping?][
+    go
+    ;set stopping? 
+  ]
+end
+
+
+to go
+  
+  ; different update scheme
+  ask turtles [
+    let neighboragents turtles in-radius neighborhood-radius
+    let wantedcolor color
+    if count neighboragents with [color = wantedcolor] / count neighboragents < similar-wanted [random-move]
+  ]
+  
+  tick
+  
+end

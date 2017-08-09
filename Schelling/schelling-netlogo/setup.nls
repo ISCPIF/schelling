@@ -1,0 +1,73 @@
+
+;;
+; setup
+
+
+to setup
+  
+  ca
+  
+  setup-globals
+  
+  setup-patches-capacity
+  
+  setup-agents
+  
+  setup-display
+  
+  reset-ticks
+  
+end
+
+to reset
+  ask turtles [random-move]
+end
+
+
+to setup-globals
+  
+  set forced-total-capacity 10000
+  
+  set neighborhood-radius 2
+  
+end
+
+
+to setup-patches-capacity
+  
+  if setup-capacity-mode = "morphogenesis" [
+     generate-synth-pattern
+     renormalize-capacity
+  ]
+  
+  if setup-capacity-mode = "kernel-mixture" [
+     generate-synth-city-system
+     renormalize-capacity
+  ]
+  
+  if setup-capacity-mode = "file" [
+     
+  ]
+  
+  
+  
+
+end
+
+
+to setup-agents
+  let total-capacity sum [capacity] of patches
+  let greens floor (total-capacity * green-ratio)
+  let reds floor (total-capacity * red-ratio)
+  
+  create-turtles (greens + reds) [
+    let r random-float 1 ifelse r < greens / (greens + reds) [set color green][set color red]
+    new-agent
+  ]
+  
+end
+
+
+to setup-display
+  update-display
+end
