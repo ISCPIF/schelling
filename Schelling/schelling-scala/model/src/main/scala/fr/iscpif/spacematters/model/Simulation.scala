@@ -35,7 +35,20 @@ object Simulation extends App {
 */
   }
 
-  println(simulation.run)
+  //println(simulation.run)
+
+  //println("initial dissimilarity" + (metric.dissimilarity(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)).toString)
+  val result = simulation.run(rng)
+
+  println("dissimilarity = " + (metric.dissimilarity(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)).toString)
+  /*val moran = fr.iscpif.spacematters.model.metric.Moran.colorRatioMoran(result.state, fr.iscpif.spacematters.model.Red)
+  val entropy = metric.segregationEntropy(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)
+  val exposureRedGreen = metric.exposureOfColor1ToColor2(result.state, fr.iscpif.spacematters.model.Red, fr.iscpif.spacematters.model.Green)
+  val exposureGreenRed = metric.exposureOfColor1ToColor2(result.state,fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)
+  val isolationRedGreen = metric.isolation(result.state,fr.iscpif.spacematters.model.Red, fr.iscpif.spacematters.model.Green)
+  val isolationGreenRed = metric.isolation(result.state, fr.iscpif.spacematters.model.Green,fr.iscpif.spacematters.model.Red)
+  val deltaRedGreen = metric.delta(result.state, fr.iscpif.spacematters.model.Red, fr.iscpif.spacematters.model.Green)
+  val deltaGreenRed = metric.delta(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)*/
 
   /* val dir = "/tmp/"
 

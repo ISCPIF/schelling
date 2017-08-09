@@ -29,4 +29,6 @@ trait Neighborhood {
       (i, j) = position
     } yield state(i + oi)(j + oj)
 
+  def init() = {}
+
 }
