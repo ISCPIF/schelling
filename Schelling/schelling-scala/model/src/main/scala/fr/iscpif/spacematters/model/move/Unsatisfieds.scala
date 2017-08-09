@@ -20,9 +20,18 @@ import fr.iscpif.spacematters.model._
 
 case class Unsatisfied(position: Position, color: Color, number: Int)
 
-trait Unsatisfieds <: Neighborhood {
+//trait Unsatisfieds <: Neighborhood {
+trait Unsatisfieds {
 
   def similarWanted: Double
+  def neighborhoodSize: Int
+
+  def neighbors(state: Matrix[Cell], position: Position) =
+    for {
+      oi ← -neighborhoodSize to neighborhoodSize
+      oj ← -neighborhoodSize to neighborhoodSize
+      (i, j) = position
+    } yield state(i + oi)(j + oj)
 
   def unsatisfied(state: State, position: Position, color: Color) = {
     val neighbourCells = neighbors(state, position)
