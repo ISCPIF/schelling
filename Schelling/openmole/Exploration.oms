@@ -36,7 +36,8 @@ val deltaGreenRed = Val[Double]
 
 val modelTask =
   ScalaTask("""
-    |val simulation = new fr.iscpif.spacematters.model.Schelling with fr.iscpif.spacematters.model.container.FileContainer with fr.iscpif.spacematters.model.initial.RandomState with fr.iscpif.spacematters.model.move.RandomMoves with fr.iscpif.spacematters.model.stop.SpeilmanStop {
+    |println("initializing...")
+    |val simulation = new fr.iscpif.spacematters.model.Schelling with fr.iscpif.spacematters.model.initial.RandomState with fr.iscpif.spacematters.model.container.FileContainer with fr.iscpif.spacematters.model.move.RandomMoves with fr.iscpif.spacematters.model.stop.SpeilmanStop {
     |  override def size: Int = 20
     |  override def greenRatio: Double = input.greenRatio
     |  override def redRatio: Double = input.redRatio
@@ -44,7 +45,7 @@ val modelTask =
     |  override def similarWanted: Double = input.similarWanted
     |  override def configfile: String = input.gridId
     |}
-    |
+    |println("running...")
     |val result = simulation.run(newRNG(seed))
     |val step = result.step
     |val unsatisfiedRatio = simulation.unsatisifedRatio(result.state)
@@ -61,7 +62,7 @@ val modelTask =
     |val deltaGreenRed = metric.delta(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)
     |""".stripMargin
   ) set (
-    plugins += pluginsOf[fr.iscpif.spacematters.model.Schelling],
+    //plugins += pluginsOf[fr.iscpif.spacematters.model.Schelling],
     inputs += (greenRatio, redRatio, maxCapacity, similarWanted,gridId, seed),
     outputs += (greenRatio, redRatio, maxCapacity, similarWanted,gridId, seed),
     outputs += (step, unsatisfiedRatio, dissimilarity, moran, entropy, exposureRedGreen, exposureGreenRed, isolationRedGreen, isolationGreenRed, deltaRedGreen, deltaGreenRed)
@@ -73,7 +74,7 @@ val modelCapsule = Capsule(modelTask)
 val ids = Source.fromFile(workDirectory / "Grids/15gridsPerClass.csv").getLines().drop(1).map(s => (workDirectory / "Grids/quantGrids" / s.split(",")(0)).toString)
 
 val explo = ExplorationTask (
-      SobolSampling (
+      LHS (
         1,
         greenRatio in Range(0.0, 1.0),
         redRatio in Range(0.0, 1.0),
