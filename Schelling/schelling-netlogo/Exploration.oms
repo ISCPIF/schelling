@@ -57,11 +57,11 @@ val explo = ExplorationTask (
         1400,
         greenRatio in Range(0.0, 1.0),
         redRatio in Range(0.0, 1.0),
-        similarWanted in Range(0.0, 1.0),
+        similarWanted in Range(0.0, 1.0)
       ).filter("greenRatio + redRatio < 0.98") x (seed in UniformDistribution[Long]() take 100) x (gridId in ids)
 )
-//val purpose = "TEST_GRID"
-val purpose = "SOBOL_ALLGRIDS"
+val purpose = "TEST_GRID"
+//val purpose = "SOBOL_ALLGRIDS"
 
 val displayExplo = ScalaTask("println(\"display\")") set (
   inputs += (greenRatio, redRatio, similarWanted,gridId, seed),
