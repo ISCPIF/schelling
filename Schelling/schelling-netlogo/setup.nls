@@ -5,7 +5,7 @@
 
 to setup
   
-  ca
+  if headless? != true [ca]
   
   setup-globals
   
@@ -30,6 +30,13 @@ to setup-globals
   
   set neighborhood-radius 2
   
+  set max-time-step 200
+  set max-satisfied 0.98
+  set satisfied-variation-window 20
+  set min-variation 0.01
+  
+  set unsatisfied-rates []
+  
 end
 
 
@@ -46,7 +53,13 @@ to setup-patches-capacity
   ]
   
   if setup-capacity-mode = "file" [
-     
+     ; read capacities from file
+     let raw but-first read-csv config-file ","
+     foreach raw [
+       ;show read-from-string item 0 ? show read-from-string item 1 ?
+       ask patch (read-from-string item 0 ? - 1) (read-from-string item 1 ? - 1) [set sp-occupants (read-from-string item 2 ?)] 
+     ]
+     renormalize-capacity
   ]
   
   
@@ -70,4 +83,21 @@ end
 
 to setup-display
   update-display
+end
+
+
+to setup-headless
+  
+  
+  set sp-alpha-localization 1.2
+  set sp-max-pop 10000
+  set sp-growth-rate 100
+  set sp-diffusion-steps 1
+  set sp-diffusion 0.06
+  
+  set synth-center-number 3
+  set synth-max-pop 300
+  set synth-rank-size-exp 1.6
+  set synth-center-density 9
+  
 end

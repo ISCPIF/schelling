@@ -1,0 +1,35 @@
+
+;;
+; experiments
+
+to setup-experiment [greenratio redratio similarwanted setuptype configfile]
+  
+  show (word "Setting up : " greenratio " ; " redratio " ; " similarwanted " ; from file : " configfile)
+  
+  set green-ratio greenratio
+  set red-ratio redratio
+  set similar-wanted similarwanted
+  
+  if setuptype = 0 [set setup-capacity-mode "file"] if setuptype = 1 [set setup-capacity-mode "morphogenesis"] if setuptype = 2 [set setup-capacity-mode "kernel-mixture"]
+  set config-file configfile
+  
+  set headless? true
+  
+  setup-headless
+  
+  setup
+    
+end
+
+
+
+to run-experiment
+  go-until-stop
+end
+
+
+to test-experiment
+  ca
+  setup-experiment 0.3 0.3 0.45 2 ""
+  run-experiment
+end
