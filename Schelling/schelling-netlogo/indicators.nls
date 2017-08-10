@@ -22,12 +22,12 @@ to-report dissimilarity
 end
 
 to-report moran-red
-  ask patches [set red-patch-ratio count turtles-here with [color = red] / count turtles-here]
+  ask patches [ifelse count turtles-here > 0 [set red-patch-ratio count turtles-here with [color = red] / count turtles-here][set red-patch-ratio 0]]
   report morphology:moran 1
 end
 
 to-report moran-green
-  ask patches [set green-patch-ratio count turtles-here with [color = green] / count turtles-here]
+  ask patches [ifelse count turtles-here > 0 [set green-patch-ratio count turtles-here with [color = green] / count turtles-here][set green-patch-ratio 0]]
   report morphology:moran 2
 end
 

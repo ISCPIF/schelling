@@ -61,7 +61,8 @@ to setup-patches-capacity
      ]
      renormalize-capacity
   ]
-  
+ 
+  show (word "Total capacity : " sum [capacity] of patches)
   
   
 
@@ -78,6 +79,8 @@ to setup-agents
     new-agent
   ]
   
+  show (word "Agents : " count turtles)
+
 end
 
 

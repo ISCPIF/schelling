@@ -9,6 +9,7 @@ to new-agent
 end
 
 to random-move
-  move-to one-of patches with [count turtles-here < capacity]
+  let pot-dest  one-of patches with [count turtles-here < capacity]
+  if pot-dest != nobody [move-to pot-dest]
   setxy xcor - 0.5 + random-float 1 ycor - 0.5 + random-float 1
 end
