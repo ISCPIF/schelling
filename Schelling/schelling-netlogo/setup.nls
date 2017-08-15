@@ -53,8 +53,10 @@ to setup-patches-capacity
   ]
   
   if setup-capacity-mode = "file" [
+    let file (word "./Grids/quantGrids/" (item 0 (item config-file (but-first read-csv "./Grids/15gridsPerClass.csv" ","))))
+    show (word "Setting up from file " file)
      ; read capacities from file
-     let raw but-first read-csv config-file ","
+     let raw but-first read-csv file ","
      foreach raw [
        ;show read-from-string item 0 ? show read-from-string item 1 ?
        ask patch (read-from-string item 0 ? - 1) (read-from-string item 1 ? - 1) [set sp-occupants (read-from-string item 2 ?)] 

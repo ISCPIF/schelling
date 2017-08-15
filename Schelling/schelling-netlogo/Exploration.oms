@@ -27,7 +27,7 @@ val deltaRed = Val[Double]
 val deltaGreen = Val[Double]
 
 //setup-experiment [greenratio redratio similarwanted setuptype configfile
-val cmds = Seq("setup-experiment ${greenRatio} ${redRatio} ${similarWanted} 0 \"${gridId}\"","run-experiment")
+val cmds = Seq("setup-experiment ${greenRatio} ${redRatio} ${similarWanted} 0 ${gridId}","run-experiment")
 
 
 val model =
@@ -60,19 +60,19 @@ val explo = ExplorationTask (
         similarWanted in Range(0.0, 1.0)
       ).filter("greenRatio + redRatio < 0.98") x (seed in UniformDistribution[Long]() take 100) x (gridId in (0 to 44 by 1))
 )
-val purpose = "TEST_GRID"
-//val purpose = "SOBOL_ALLGRIDS"
+//val purpose = "TEST_GRID"
+val purpose = "LHS_ALLGRIDS"
 
-val displayExplo = ScalaTask("println(\"display\")") set (
+/*val displayExplo = ScalaTask("println(\"display\")") set (
   inputs += (greenRatio, redRatio, similarWanted,gridId, seed),
   outputs += (greenRatio, redRatio, similarWanted,gridId, seed)
-)
+)*/
 
 val indicsoutput = AppendToCSVFileHook(workDirectory / "exploration" / ((new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")).format(new Date()))+"_"+purpose+".csv")
 
-val local = LocalEnvironment(20)
-//val grid = EGIEnvironment("vo.complex-systems.eu", openMOLEMemory = 2400 megabytes)
+//val local = LocalEnvironment(20)
+val grid = EGIEnvironment("vo.complex-systems.eu", openMOLEMemory = 2400 megabytes)
 
 
-//explo -< (model on grid by 50 hook indicsoutput)
-explo -< (displayExplo on local hook indicsoutput)
+explo -< (model on grid by 50 hook indicsoutput)
+//explo -< (displayExplo on local hook indicsoutput)

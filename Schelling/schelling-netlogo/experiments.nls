@@ -30,6 +30,6 @@ end
 
 to test-experiment
   ca
-  setup-experiment 0.3 0.3 0.45 2 ""
+  setup-experiment 0.04 0.09 0.3 0 "Grids/quantGrids/14587718181_config.csv"
   run-experiment
 end
