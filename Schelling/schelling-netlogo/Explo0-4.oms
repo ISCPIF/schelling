@@ -50,19 +50,8 @@ NetLogo5Task.workspace(workDirectory,"HEADLESS_Schelling.nlogo",cmds) set(
 
 
 
-
-
-
-
-
 val minId = 0
 val maxId = 4
-
-
-
-
-
-
 
 
 

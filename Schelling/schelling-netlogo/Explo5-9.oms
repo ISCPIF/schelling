@@ -50,19 +50,8 @@ NetLogo5Task.workspace(workDirectory,"HEADLESS_Schelling.nlogo",cmds) set(
 
 
 
-
-
-
-
-
-val minId = 0
-val maxId = 4
-
-
-
-
-
-
+val minId = 5
+val maxId = 9
 
 
 
@@ -72,7 +61,7 @@ val explo = ExplorationTask (
         greenRatio in Range(0.0, 1.0),
         redRatio in Range(0.0, 1.0),
         similarWanted in Range(0.0, 1.0)
-      ).filter("greenRatio + redRatio < 0.98").filter("greenRatio + redRatio > 0.0") x (seed in UniformDistribution[Long]() take 100) x (gridId in (minId to maxId by 1))
+      ).filter("greenRatio + redRatio < 0.98").filter("greenRatio + redRatio > 0.0") x (seed in UniformDistribution[Long]() take 100) x  x (gridId in (minId to maxId by 1)
 )
 //val purpose = "TEST_GRID"
 val purpose = "SOBOL_GRIDS-"+minId.toString+"-"+maxId.toString
