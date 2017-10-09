@@ -22,7 +22,7 @@ distancesToRef <- function(simresults,reference,parameters,indicators,idcol){
     for(indic in indicators){
       x = d[[paste0(indic,'.x')]][(!is.na(d[[paste0(indic,'.x')]]))&(!is.na(d[[paste0(indic,'.y')]]))]
       y = d[[paste0(indic,'.y')]][(!is.na(d[[paste0(indic,'.x')]]))&(!is.na(d[[paste0(indic,'.y')]]))]
-      currentdist=currentdist+2*(sum((x-y)^2)/length(x))/(sd(x)^2+sd(y)^2)
+      if(sd(x)+sd(y)>0){currentdist=currentdist+2*(sum((x-y)^2)/length(x))/(sd(x)^2+sd(y)^2)}
     }
     dists=append(dists,currentdist/length(indicators))
   }
