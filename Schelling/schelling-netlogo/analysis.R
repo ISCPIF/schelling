@@ -39,6 +39,10 @@ g = ggplot(data.frame(pca$morph,distance=dists),aes(x=PC1,y=PC2,color=distance))
 g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 0.5)
 ggsave(file='res/schelling-relativedistance_morphspace.pdf',width=18,height=15,units = 'cm')
 
+g=ggplot(data.frame(gridData,distance=dists),aes(x=alphalocalization,y=diffusion,color=distance))
+g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 0.5)+xlab(expression(alpha))+ylab(expression(beta))
+ggsave(file='res/schelling-relativedistance_metaparams.pdf',width=18,height=15,units = 'cm')
+
 
 
 
