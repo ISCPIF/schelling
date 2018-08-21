@@ -63,6 +63,22 @@ to setup-patches-capacity
      ]
      renormalize-capacity
   ]
+  
+  if setup-capacity-mode = "variable" [
+    if not is-list? setup-grid-array and not is-list? (item 0 setup-grid-array) [error "Spatial configuration variable of the wrong type (requires List[List[Double]]" ]
+    let i min-pxcor let j min-pycor
+    foreach setup-grid-array [
+       set j min-pycor
+       foreach ? [
+         ask patch i j [set sp-occupants ?]
+         set j j + 1
+       ]
+       set i i + 1 
+    ]
+    
+    renormalize-capacity
+    
+  ]
  
   show (word "Total capacity : " sum [capacity] of patches)
   
