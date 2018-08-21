@@ -36,12 +36,12 @@ for(i in 1:nrow(grids)){
 pca = morphoPCA(gridData[,c("id","distance","entropy","moran","slope")])
 
 g = ggplot(data.frame(pca$morph,distance=dists),aes(x=PC1,y=PC2,color=distance))
-g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 0.5)
-ggsave(file='res/schelling-relativedistance_morphspace.pdf',width=18,height=15,units = 'cm')
+g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 1.0)
+ggsave(file='res/schelling-relativedistance_morphspace_red.pdf',width=18,height=15,units = 'cm')
 
 g=ggplot(data.frame(gridData,distance=dists),aes(x=alphalocalization,y=diffusion,color=distance))
-g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 0.5)+xlab(expression(alpha))+ylab(expression(beta))
-ggsave(file='res/schelling-relativedistance_metaparams.pdf',width=18,height=15,units = 'cm')
+g+geom_point(size=2.5)+stdtheme+xlab(expression(alpha))+ylab(expression(beta))+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 1.0)
+ggsave(file='res/schelling-relativedistance_metaparams_red.pdf',width=18,height=15,units = 'cm')
 
 
 
