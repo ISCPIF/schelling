@@ -30,7 +30,8 @@ to setup-globals
   set min-vision 1
   set max-vision 6
   
-  set total-time-steps 10000
+  ;set total-time-steps 10000
+  set total-time-steps 1000
   
 end
 

@@ -1,5 +1,8 @@
 
-extensions [gradient morphology]
+extensions [
+  ;gradient
+  morphology
+]
 
 
 __includes [
@@ -184,7 +187,7 @@ initial-population
 initial-population
 10
 1000
-100
+200
 10
 1
 NIL
@@ -199,7 +202,7 @@ minimum-sugar-endowment
 minimum-sugar-endowment
 0
 200
-5
+50
 1
 1
 NIL
@@ -252,7 +255,7 @@ maximum-sugar-endowment
 maximum-sugar-endowment
 0
 200
-58
+110
 1
 1
 NIL
@@ -351,7 +354,7 @@ CHOOSER
 setup-capacity-mode
 setup-capacity-mode
 "file" "synthetic-pattern" "kernel-mixture"
-2
+0
 
 SLIDER
 5
@@ -362,7 +365,7 @@ synth-center-number
 synth-center-number
 0
 10
-6
+5
 1
 1
 NIL
@@ -402,7 +405,7 @@ synth-rank-size-exp
 synth-rank-size-exp
 0
 3
-0.5
+0.4
 0.1
 1
 NIL

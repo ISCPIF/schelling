@@ -1,4 +1,6 @@
-setwd("~/Documents/spacemattersJUSTE/Schelling/Analysis")
+# prefix = "~/Documents/spacemattersJUSTE"
+# prefix = paste0(Sys.getenv('CS_HOME'))
+setwd(paste0("/Schelling/Analysis"))
 grid.file = read.csv("15gridsPerClass.csv")
 result.file = read.csv("2017_08_10_09_42_02_LHS_ALLGRIDS.csv")
 

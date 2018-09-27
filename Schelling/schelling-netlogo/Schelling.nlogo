@@ -336,7 +336,7 @@ green-ratio
 green-ratio
 0
 1
-0.3
+0.07
 0.01
 1
 NIL
@@ -351,7 +351,7 @@ red-ratio
 red-ratio
 0
 1
-0.3
+0.08
 0.01
 1
 NIL
@@ -366,7 +366,7 @@ similar-wanted
 similar-wanted
 0
 1
-0.45
+0.77
 0.01
 1
 NIL

@@ -15,6 +15,9 @@ source(paste0(Sys.getenv('CS_HOME'),'/SpaceMatters/Models/spacematters/Scripts/f
 
 res <- as.tbl(read.csv('exploration/SOBOL_ALLGRIDS.csv'))
 
+
+
+
 sres = res %>% group_by(greenRatio,redRatio,similarWanted,gridId) %>% summarise(
   dissimilarity=median(dissimilarity),entropy=median(entropy),
   moran=ifelse(mean(greenRatio)>mean(redRatio),median(moranGreen),median(moranRed)),
@@ -22,7 +25,27 @@ sres = res %>% group_by(greenRatio,redRatio,similarWanted,gridId) %>% summarise(
   minorityIndex = abs(mean(greenRatio)-mean(redRatio))
 )
 
-dists=distancesToRef(simresults=sres,reference=sres[sres$gridId==0,],parameters=c('similarWanted','vacancyRate','minorityIndex'),indicators=c("dissimilarity","moran","entropy"),idcol="gridId")
+
+# examples of phase diag
+sres$greenRatioF = cut(sres$greenRatio,10)
+g=ggplot(sres,aes(x=greenRatio+redRatio,y=similarWanted,color=moran))
+g+geom_point()+facet_wrap(~greenRatioF)
+# -> cannot provide similar grids because of sampling
+g=ggplot(sres,aes(x=greenRatio+redRatio,y=similarWanted,color=moran))
+g+geom_point()
+
+g=ggplot(res[res$gridId%in%0:5,],aes(x=greenRatio+redRatio,y=similarWanted,color=entropy))
+g+geom_point()+facet_wrap(~gridId)
+
+
+# distances
+
+dists=distancesToRef(simresults=sres,
+                     reference=sres[sres$gridId==0,],
+                     parameters=c('similarWanted','vacancyRate','minorityIndex'),
+                     indicators=c("dissimilarity","moran","entropy"),
+                     idcol="gridId"
+                     )
 
 # get grid morphologies
 grids <- as.tbl(read.csv('Grids/15gridsPerClass.csv',stringsAsFactors = F))
