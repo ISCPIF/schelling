@@ -1,10 +1,11 @@
 # prefix = "~/Documents/spacemattersJUSTE"
-# prefix = paste0(Sys.getenv('CS_HOME'))
-setwd(paste0("/Schelling/Analysis"))
+# prefix = paste0(Sys.getenv('CS_HOME'),'/SpaceMatters/Models/spacematters')
+setwd(paste0(prefix,"/Schelling/Analysis"))
 grid.file = read.csv("15gridsPerClass.csv")
-result.file = read.csv("2017_08_10_09_42_02_LHS_ALLGRIDS.csv")
+#result.file = read.csv("2017_08_10_09_42_02_LHS_ALLGRIDS.csv")
+result.file = read.csv("../schelling-netlogo/exploration/SOBOL_ALLGRIDS.csv")
 
-setwd("~/Documents/spacemattersJUSTE/Schelling/Grids/quantGrids")
+setwd("../Grids/quantGrids")
 quantgrids = data.frame()
 for (g in grid.file$id){
   gp = read.csv(paste0(strsplit(as.character(g),"_")[[1]][1], "_params.csv"))

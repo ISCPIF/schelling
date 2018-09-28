@@ -23,6 +23,8 @@ sref = ref %>% group_by(population,minSugar,maxSugar)%>%summarise(gini=mean(mwgi
 # compute the distance to reference
 dists=distancesToRef(simresults=sres,reference=sref,parameters=c('population','minSugar','maxSugar'),indicators=c("gini"),idcol="id")
 
+metaparams = sres %>% group_by(id)%>%summarise(alpha=mean(spAlpha),diffSteps=mean(spDiffsteps),diffusion=mean(spDiffusion),growth=mean(spGrowth))
+
 
 
 ##
@@ -36,28 +38,28 @@ rot<-read.csv('20170328_gridsynth_rotation.csv',row.names = 1 )
 matrix(data=c(0.8290054369272968,0.9640148151339423,0.2563323814971014,-0.3742297460724673),nrow=1)%*%as.matrix(rot)
 
 # get morphological measures
-morph <- as.tbl(read.csv('exploration/20170328_gridsynth_morpho.csv'))
+morph <- as.tbl(read.csv('exploration/20170328_gridsynth_morphopca.csv'))
 names(morph)[2]<-"id"
 
 
 # plots
 
-g = ggplot(data.frame(morph,distance=dists),aes(x=PC1,y=PC2,color=distance))
+g = ggplot(data.frame(morph,distphasediag=dists),aes(x=PC1,y=PC2,color=distphasediag))
 g+geom_point(size=2.5)+geom_point(x=1.130869,y=0.09586869,col='black',size=3)+
   geom_point(x=morph$PC1[morph$id==27],y=morph$PC2[morph$id==27],pch=0,size=4,col=3)+
   geom_point(x=morph$PC1[morph$id==0],y=morph$PC2[morph$id==0],pch=0,size=4,col=4)+stdtheme+
-  scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 1)
-ggsave(file='res/relativedistance_morphspace.pdf',width=18,height=15,units = 'cm')
+  scale_colour_gradient2(low='darkgreen',mid='grey',high='red',midpoint = 1,name="distance")
+ggsave(file='res/relativedistance_morphspace.png',width=18,height=15,units = 'cm')
 
 g=ggplot(data.frame(metaparams,distance=dists),aes(x=alpha,y=diffusion,color=distance))
-g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='red',mid='grey',high='darkgreen',midpoint = 1)+
+g+geom_point(size=2.5)+stdtheme+scale_colour_gradient2(low='darkgreen',mid='grey',high='red',midpoint = 1)+
   xlab(expression(alpha))+ylab(expression(beta))
-ggsave(file='res/relativedistance_metaparams.pdf',width=18,height=15,units = 'cm')
+ggsave(file='res/relativedistance_metaparams.png',width=18,height=15,units = 'cm')
 
 
-g=ggplot(data.frame(metaparams,dist=dists),aes(x=growth,y=diffusion,color=dist))
-g+geom_point(size=2)
+#g=ggplot(data.frame(metaparams,dist=dists),aes(x=growth,y=diffusion,color=dist))
+#g+geom_point(size=2)
 
-g=ggplot(data.frame(metaparams,dist=dists),aes(x=diffSteps,y=diffusion,color=dist))
-g+geom_point(size=2)
+#g=ggplot(data.frame(metaparams,dist=dists),aes(x=diffSteps,y=diffusion,color=dist))
+#g+geom_point(size=2)
 
