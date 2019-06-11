@@ -202,7 +202,7 @@ synth-max-pop
 synth-max-pop
 0
 1000
-103
+206
 1
 1
 NIL
@@ -336,7 +336,7 @@ green-ratio
 green-ratio
 0
 1
-0.07
+0.21
 0.01
 1
 NIL
@@ -351,7 +351,7 @@ red-ratio
 red-ratio
 0
 1
-0.08
+0.19
 0.01
 1
 NIL
@@ -366,7 +366,7 @@ similar-wanted
 similar-wanted
 0
 1
-0.77
+0.67
 0.01
 1
 NIL
