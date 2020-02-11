@@ -27,7 +27,7 @@ val deltaRed = Val[Double]
 val deltaGreen = Val[Double]
 
 //setup-experiment [greenratio redratio similarwanted setuptype configfile
-val cmds = Seq("setup-experiment ${greenRatio} ${redRatio} ${similarWanted} 0 \"${gridId}\"","run-experiment")
+val cmds = Seq("setup-experiment ${greenRatio} ${redRatio} ${similarWanted} 0 ${gridId}","run-experiment")
 
 
 val model =
