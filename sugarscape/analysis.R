@@ -73,7 +73,19 @@ sres <- as.tbl(read.csv(file='exploration/20170328_gridsynth_sum.csv'))
 ref <- as.tbl(read.csv('exploration/2017_03_28_11_57_40_GRID_FIXED.csv'))
 sref = ref %>% group_by(population,minSugar,maxSugar)%>%summarise(gini=mean(mwgini))
 
-dists=distancesToRef(simresults=sres,reference=sref,parameters=c('population','minSugar','maxSugar'),idcol="id")
+
+for(alpha in c(1,2,3,10,1000)){
+  show(paste0('alpha = ',alpha))
+dists=distancesToRef(
+  simresults=sres,
+  reference=sref,
+  parameters=c('population','minSugar','maxSugar'),
+  indicators=c("gini"),
+  idcol="id",
+  distfun=function(x,y){(sum(abs(x-y)^alpha)/length(x))^(1/alpha)}  
+)
+show(summary(dists))
+}
   
 morph <- as.tbl(read.csv('exploration/20170328_gridsynth_morpho.csv'))
 names(morph)[2]<-"id"

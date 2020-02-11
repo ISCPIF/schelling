@@ -11,6 +11,7 @@ to setup-experiment [greenratio redratio similarwanted setuptype configfile]
   set similar-wanted similarwanted
   
   if setuptype = 0 [set setup-capacity-mode "file"] if setuptype = 1 [set setup-capacity-mode "morphogenesis"] if setuptype = 2 [set setup-capacity-mode "kernel-mixture"]
+  if setuptype = 3 [set setup-capacity-mode "variable"]
   set config-file configfile
   
   set headless? true

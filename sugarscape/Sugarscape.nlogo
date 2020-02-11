@@ -1,20 +1,23 @@
 
-extensions [gradient morphology]
+extensions [
+  ;gradient
+  morphology
+]
 
 
 __includes [
-  
+
    "setup.nls"
    "main.nls"
    "patches.nls"
    "turtles.nls"
-   
+
    "indicators.nls"
    "display.nls"
    "embedded-synth-pattern.nls"
    "synth-city-system.nls"
    "experiments.nls"
-   
+
    "utils/utils.nls"
    "utils/List.nls"
    "utils/SpatialKernels.nls"
@@ -22,7 +25,7 @@ __includes [
 
 
 globals [
-  
+
   ; parameters
   min-metabolism
   max-metabolism
@@ -30,21 +33,21 @@ globals [
   max-death-age
   min-vision
   max-vision
-  
+
   total-time-steps
-  
-  
+
+
   ; indicators
   gini-values
   gini-index-reserve
   lorenz-points
-  
+
   ;;
   ; synthetic pattern globals
   sp-total-time-steps
   sp-population
   ;sp-max-pop
-  
+
   headless?
 ]
 
@@ -60,13 +63,13 @@ turtles-own [
 patches-own [
   psugar           ;; the amount of sugar on this patch
   max-psugar       ;; the maximum amount of sugar that can be on this patch
-  
+
   ;;
   ; synthetic pattern generation
   sp-density
   sp-occupants
-  
-  
+
+
 ]
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -184,7 +187,7 @@ initial-population
 initial-population
 10
 1000
-100
+200
 10
 1
 NIL
@@ -199,7 +202,7 @@ minimum-sugar-endowment
 minimum-sugar-endowment
 0
 200
-5
+50
 1
 1
 NIL
@@ -252,7 +255,7 @@ maximum-sugar-endowment
 maximum-sugar-endowment
 0
 200
-58
+110
 1
 1
 NIL
@@ -351,7 +354,7 @@ CHOOSER
 setup-capacity-mode
 setup-capacity-mode
 "file" "synthetic-pattern" "kernel-mixture"
-2
+0
 
 SLIDER
 5
@@ -362,7 +365,7 @@ synth-center-number
 synth-center-number
 0
 10
-6
+5
 1
 1
 NIL
@@ -402,7 +405,7 @@ synth-rank-size-exp
 synth-rank-size-exp
 0
 3
-0.5
+0.4
 0.1
 1
 NIL
@@ -443,7 +446,7 @@ The inequity of the resulting distribution can be described graphically by the L
 
 ## HOW IT WORKS
 
-Each patch contains some sugar, the maximum amount of which is predetermined. At each tick, each patch regains one unit of sugar, until it reaches the maximum amount.  
+Each patch contains some sugar, the maximum amount of which is predetermined. At each tick, each patch regains one unit of sugar, until it reaches the maximum amount.
 The amount of sugar a patch currently contains is indicated by its color; the darker the yellow, the more sugar.
 
 At setup, agents are placed at random within the world. Each agent can only see a certain distance horizontally and vertically. At each tick, each agent will move to the nearest unoccupied location within their vision range with the most sugar, and collect all the sugar there.  If its current location has as much or more sugar than any unoccupied location it can see, it will stay put.
@@ -801,7 +804,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.1.0
+NetLogo 5.3.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

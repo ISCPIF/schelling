@@ -1,7 +1,7 @@
 extensions [morphology]
 
 __includes [
-  
+
    "setup.nls"
    "main.nls"
    "patches.nls"
@@ -9,58 +9,61 @@ __includes [
    "indicators.nls"
    "experiments.nls"
    "display.nls"
-  
+
    "embedded-synth-pattern.nls"
-   "synth-city-system.nls" 
-  
+   "synth-city-system.nls"
+
    "utils/List.nls"
    "utils/SpatialKernels.nls"
    "utils/File.nls"
    "utils/String.nls"
-  
+
 ]
 
 
 
 globals [
- 
+
   sp-total-time-steps
   sp-population
   forced-total-capacity
-  
+
   neighborhood-radius
-  
+
   max-time-step
   max-satisfied
   satisfied-variation-window
   min-variation
-  
+
   unsatisfied-rates
-  
+
   headless?
-  
+
+  ; variable for external setup
+  setup-grid-array
+
 ]
 
 
 turtles-own [
-  unsatisfied? 
+  unsatisfied?
 ]
 
 
 patches-own [
-  
+
   capacity
-  
+
   red-patch-ratio
   green-patch-ratio
-  
-  
+
+
   ; urban form generation vars
   sp-density
   sp-occupants
-  
-  
-  
+
+
+
 ]
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -199,7 +202,7 @@ synth-max-pop
 synth-max-pop
 0
 1000
-103
+206
 1
 1
 NIL
@@ -272,7 +275,7 @@ CHOOSER
 56
 setup-capacity-mode
 setup-capacity-mode
-"morphogenesis" "kernel-mixture" "file"
+"morphogenesis" "kernel-mixture" "file" "variable"
 1
 
 BUTTON
@@ -333,7 +336,7 @@ green-ratio
 green-ratio
 0
 1
-0.3
+0.21
 0.01
 1
 NIL
@@ -348,7 +351,7 @@ red-ratio
 red-ratio
 0
 1
-0.3
+0.19
 0.01
 1
 NIL
@@ -363,7 +366,7 @@ similar-wanted
 similar-wanted
 0
 1
-0.45
+0.67
 0.01
 1
 NIL
@@ -763,7 +766,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.1.0
+NetLogo 5.3.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
