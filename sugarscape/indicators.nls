@@ -1,0 +1,108 @@
+
+
+;;
+; indicators
+
+to compute-indicators
+  show word "moran = " moran
+  show word "entropy = " entropy
+  show word "slope = " slope
+  show word "slope-r2 = " slope-rsquared
+  show word "distance = " mean-distance
+end
+
+
+
+to update-indicators
+  update-lorenz-and-gini
+  
+  ; update historical values
+  set gini-values lput gini gini-values
+end
+
+
+
+to update-lorenz-and-gini
+  let num-people count turtles
+  let sorted-wealths sort [sugar] of turtles
+  let total-wealth sum sorted-wealths
+  let wealth-sum-so-far 0
+  let index 0
+  set gini-index-reserve 0
+  set lorenz-points []
+  repeat num-people [
+    set wealth-sum-so-far (wealth-sum-so-far + item index sorted-wealths)
+    set lorenz-points lput ((wealth-sum-so-far / total-wealth) * 100) lorenz-points
+    set index (index + 1)
+    set gini-index-reserve
+      gini-index-reserve +
+      (index / num-people) -
+      (wealth-sum-so-far / total-wealth)
+  ]
+end
+
+
+;;
+;  gini index
+to-report gini
+  report (gini-index-reserve / count turtles) * 2
+end
+
+;;
+; no static equilibrium but dynamical -> take moving window average ?
+;  : to be compared with average over runs : some kind of check for ergodicity
+;
+;  TODO : would be interesting to look at different time scales implied (link with some kind of spectral study of the model, can we predict them ?)
+;
+to-report moving-window-gini
+  ifelse length gini-values = 0 [report 0][
+    report mean (sublist gini-values (max list 0 (length gini-values - 1000)) (length gini-values))
+  ]
+end
+
+
+
+;;
+; morphological indicators
+
+to-report moran
+  report morphology:moran 0
+end
+
+to-report entropy
+  report morphology:entropy 0
+end
+
+to-report slope
+  report first morphology:slope 0
+end
+
+to-report slope-rsquared
+  report last morphology:slope 0
+end
+
+to-report mean-distance
+  report morphology:distance 0
+end
+
+
+
+to-report moran-ressource
+  report morphology:moran 1
+end
+
+to-report entropy-ressource
+  report morphology:entropy 1
+end
+
+to-report slope-ressource
+  report first morphology:slope 1
+end
+
+to-report slope-rsquared-ressource
+  report last morphology:slope 1
+end
+
+to-report mean-distance-ressource
+  report morphology:distance 1
+end

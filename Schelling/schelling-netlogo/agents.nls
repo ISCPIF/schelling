@@ -1,0 +1,15 @@
+
+;;
+;
+
+
+to new-agent
+  set shape "circle" set size 0.2
+  random-move
+end
+
+to random-move
+  let pot-dest  one-of patches with [count turtles-here < capacity]
+  if pot-dest != nobody [move-to pot-dest]
+  setxy xcor - 0.5 + random-float 1 ycor - 0.5 + random-float 1
+end

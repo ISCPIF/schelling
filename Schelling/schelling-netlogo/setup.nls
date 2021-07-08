@@ -1,0 +1,124 @@
+
+;;
+; setup
+
+
+to setup
+  
+  if headless? != true [ca]
+  
+  setup-globals
+  
+  setup-patches-capacity
+  
+  setup-agents
+  
+  setup-display
+  
+  reset-ticks
+  
+end
+
+to reset
+  ask turtles [random-move]
+end
+
+
+to setup-globals
+  
+  set forced-total-capacity 10000
+  
+  set neighborhood-radius 2
+  
+  set max-time-step 200
+  set max-satisfied 0.98
+  set satisfied-variation-window 20
+  set min-variation 0.01
+  
+  set unsatisfied-rates []
+  
+end
+
+
+to setup-patches-capacity
+  
+  if setup-capacity-mode = "morphogenesis" [
+     generate-synth-pattern
+     renormalize-capacity
+  ]
+  
+  if setup-capacity-mode = "kernel-mixture" [
+     generate-synth-city-system
+     renormalize-capacity
+  ]
+  
+  if setup-capacity-mode = "file" [
+    let file (word "./Grids/quantGrids/" (item 0 (item config-file (but-first read-csv "./Grids/15gridsPerClass.csv" ","))))
+    show (word "Setting up from file " file)
+     ; read capacities from file
+     let raw but-first read-csv file ","
+     foreach raw [
+       ;show read-from-string item 0 ? show read-from-string item 1 ?
+       ask patch (read-from-string item 0 ? - 1) (read-from-string item 1 ? - 1) [set sp-occupants (read-from-string item 2 ?)] 
+     ]
+     renormalize-capacity
+  ]
+  
+  if setup-capacity-mode = "variable" [
+    if not is-list? setup-grid-array and not is-list? (item 0 setup-grid-array) [error "Spatial configuration variable of the wrong type (requires List[List[Double]]" ]
+    let i min-pxcor let j min-pycor
+    foreach setup-grid-array [
+       set j min-pycor
+       foreach ? [
+         ask patch i j [set sp-occupants ?]
+         set j j + 1
+       ]
+       set i i + 1 
+    ]
+    
+    renormalize-capacity
+    
+  ]
+ 
+  show (word "Total capacity : " sum [capacity] of patches)
+  
+  
+
+end
+
+
+to setup-agents
+  let total-capacity sum [capacity] of patches
+  let greens floor (total-capacity * green-ratio)
+  let reds floor (total-capacity * red-ratio)
+  
+  create-turtles (greens + reds) [
+    let r random-float 1 ifelse r < greens / (greens + reds) [set color green][set color red]
+    new-agent
+  ]
+  
+  show (word "Agents : " count turtles)
+
+end
+
+
+to setup-display
+  update-display
+end
+
+
+to setup-headless
+  
+  
+  set sp-alpha-localization 1.2
+  set sp-max-pop 10000
+  set sp-growth-rate 100
+  set sp-diffusion-steps 1
+  set sp-diffusion 0.06
+  
+  set synth-center-number 3
+  set synth-max-pop 300
+  set synth-rank-size-exp 1.6
+  set synth-center-density 9
+  
+end

@@ -1,0 +1,11 @@
+
+;;;
+; display
+
+to update-display
+  ask patches [set pcolor white]
+  let mi min [capacity] of patches let ma max [capacity] of patches
+  if ma > mi [
+    ask patches [set pcolor scale-color yellow capacity mi ma] 
+  ]
+end

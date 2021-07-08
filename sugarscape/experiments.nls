@@ -1,0 +1,44 @@
+
+;;
+; experiments
+
+
+
+to setup-experiment [initial-pop min-sugar max-sugar setup-mode sp-pop sp-growth sp-alpha-loc sp-diff sp-diff-steps sy-centers sy-max-pop sy-rs-exp sy-center-dens rseed]
+  
+  set headless? true
+  
+  set initial-population initial-pop  ; \in [10,1000]
+  set minimum-sugar-endowment min-sugar ; \in [0,200]
+  set maximum-sugar-endowment max-sugar ; \in [0,200]
+  ; setup-capacity-mode \in {"file" "synthetic-pattern" "kernel-mixture"}
+  if setup-mode = 0 [set setup-capacity-mode "file"]
+  if setup-mode = 1 [set setup-capacity-mode "synthetic-pattern"]
+  if setup-mode = 2 [set setup-capacity-mode "kernel-mixture"]
+  set sp-max-pop sp-pop
+  set sp-alpha-localization sp-alpha-loc
+  set sp-growth-rate sp-growth
+  set sp-diffusion-steps sp-diff-steps
+  set sp-diffusion sp-diff
+  set synth-center-number sy-centers
+  set synth-max-pop sy-max-pop
+  set synth-rank-size-exp sy-rs-exp
+  set synth-center-density sy-center-dens
+  
+  random-seed rseed
+  
+  setup-headless
+  
+  setup
+  
+end
+
+
+to run-experiment
+  
+  repeat total-time-steps [
+    go 
+  ]
+  
+end
+

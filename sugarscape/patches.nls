@@ -1,0 +1,23 @@
+
+;;
+; patches
+
+
+to regrow-patches
+  ask patches [
+    patch-growback
+    patch-recolor
+  ]
+end
+
+
+to patch-growback ;; patch procedure
+  ;; gradually grow back all of the sugar for the patch
+  set psugar min (list max-psugar (psugar + 1))
+end
+
+
+to patch-recolor ;; patch procedure
+  ;; color patches based on the amount of sugar they have
+  set pcolor (yellow + 4.9 - psugar)
+end

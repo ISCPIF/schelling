@@ -1,0 +1,1 @@
+for i in $(seq 0 5 40); do echo $i"-"$((i + 4)); done| awk -F"-" '{print "head -n 52 ExploPart.oms > Explo"$0".oms ; echo '\''val minId = "$1"\nval maxId = "$2"'\'' >> Explo"$0".oms ; tail -n 22 ExploPart.oms >> Explo"$0".oms ; openmole --script Explo"$0".oms --password-file omlpsswd --mem 128G ; rm Explo"$0".oms"}'|sh

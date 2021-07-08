@@ -1,0 +1,78 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+import scala.io.Source
+
+logger.level("FINE")
+
+// Inputs
+val greenRatio = Val[Double]
+val redRatio = Val[Double]
+val similarWanted = Val[Double]
+val gridId = Val[Int]
+val seed = Val[Long]
+
+// Outputs
+val step = Val[Double]
+val unsatisfiedRatio = Val[Double]
+val dissimilarity = Val[Double]
+val moranRed = Val[Double]
+val moranGreen = Val[Double]
+val entropy = Val[Double]
+val exposureRedGreen = Val[Double]
+val exposureGreenRed = Val[Double]
+val isolationRed = Val[Double]
+val isolationGreen = Val[Double]
+val deltaRed = Val[Double]
+val deltaGreen = Val[Double]
+
+//setup-experiment [greenratio redratio similarwanted setuptype configfile
+val cmds = Seq("setup-experiment ${greenRatio} ${redRatio} ${similarWanted} 0 ${gridId}","run-experiment")
+
+
+val model =
+NetLogo5Task.workspace(workDirectory,"HEADLESS_Schelling.nlogo",cmds) set(
+  inputs += (greenRatio, redRatio, similarWanted,gridId, seed),
+  outputs += (greenRatio, redRatio, similarWanted,gridId, seed),
+  netLogoOutputs += ("final-step", step),
+  netLogoOutputs += ("unsatisfied-rate", unsatisfiedRatio),
+  netLogoOutputs += ("dissimilarity", dissimilarity),
+  netLogoOutputs += ("moran-red", moranRed),
+  netLogoOutputs += ("moran-green", moranGreen),
+  netLogoOutputs += ("segregation-entropy", entropy),
+  netLogoOutputs += ("exposure-red-green", exposureRedGreen),
+  netLogoOutputs += ("exposure-green-red", exposureGreenRed),
+  netLogoOutputs += ("isolation-red", isolationRed),
+  netLogoOutputs += ("isolation-green", isolationGreen),
+  netLogoOutputs += ("delta-red", deltaRed),
+  netLogoOutputs += ("delta-green", deltaGreen)
+)
+
+
+// get grid ids
+val ids = Source.fromFile(workDirectory / "Grids/15gridsPerClass.csv").getLines().drop(1).map(s => (workDirectory / "Grids/quantGrids" / s.split(",")(0)).toString)
+
+val explo = ExplorationTask (
+      LHS (
+        1400,
+        greenRatio in Range(0.0, 1.0),
+        redRatio in Range(0.0, 1.0),
+        similarWanted in Range(0.0, 1.0)
+      ).filter("greenRatio + redRatio < 0.98") x (seed in UniformDistribution[Long]() take 100) x (gridId in (0 to 44 by 1))
+)
+//val purpose = "TEST_GRID"
+val purpose = "LHS_ALLGRIDS"
+
+/*val displayExplo = ScalaTask("println(\"display\")") set (
+  inputs += (greenRatio, redRatio, similarWanted,gridId, seed),
+  outputs += (greenRatio, redRatio, similarWanted,gridId, seed)
+)*/
+
+val indicsoutput = AppendToCSVFileHook(workDirectory / "exploration" / ((new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")).format(new Date()))+"_"+purpose+".csv")
+
+//val local = LocalEnvironment(20)
+val grid = EGIEnvironment("vo.complex-systems.eu", openMOLEMemory = 2400 megabytes)
+
+
+explo -< (model on grid by 50 hook indicsoutput)
+//explo -< (displayExplo on local hook indicsoutput)

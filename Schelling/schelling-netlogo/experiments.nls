@@ -1,0 +1,36 @@
+
+;;
+; experiments
+
+to setup-experiment [greenratio redratio similarwanted setuptype configfile]
+  
+  show (word "Setting up : " greenratio " ; " redratio " ; " similarwanted " ; from file : " configfile)
+  
+  set green-ratio greenratio
+  set red-ratio redratio
+  set similar-wanted similarwanted
+  
+  if setuptype = 0 [set setup-capacity-mode "file"] if setuptype = 1 [set setup-capacity-mode "morphogenesis"] if setuptype = 2 [set setup-capacity-mode "kernel-mixture"]
+  if setuptype = 3 [set setup-capacity-mode "variable"]
+  set config-file configfile
+  
+  set headless? true
+  
+  setup-headless
+  
+  setup
+    
+end
+
+
+
+to run-experiment
+  go-until-stop
+end
+
+
+to test-experiment
+  ca
+  setup-experiment 0.04 0.09 0.3 0 "Grids/quantGrids/14587718181_config.csv"
+  run-experiment
+end

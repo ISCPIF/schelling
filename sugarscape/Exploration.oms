@@ -1,0 +1,96 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+
+// Parameter
+val population = Val[Double]
+val minSugar = Val[Double]
+val maxSugar = Val[Double]
+
+// setup
+val setup = Val[Int]
+
+val spPopulation = Val[Double]
+val spGrowth = Val[Double]
+val spAlpha = Val[Double]
+val spDiffusion = Val[Double]
+val spDiffsteps = Val[Double]
+
+val syCenters = Val[Double]
+val syMaxPop = Val[Double]
+val syRankSizeExp = Val[Double]
+val syCenterDens = Val[Double]
+
+// Reporters
+val gini = Val[Double]
+val mwgini = Val[Double]
+// morphology
+val moran=Val[Double]
+val distance=Val[Double]
+val entropy=Val[Double]
+val slope=Val[Double]
+val rsquared=Val[Double]
+val moranRessource=Val[Double]
+val distanceRessource=Val[Double]
+val entropyRessource=Val[Double]
+val slopeRessource=Val[Double]
+val rsquaredRessource=Val[Double]
+
+val id = Val[Int]
+val replication = Val[Int]
+
+
+//setup-experiment [initial-pop min-sugar max-sugar setup-mode
+//            sp-pop sp-growth sp-alpha-loc sp-diff sp-diff-steps
+//            sy-centers sy-max-pop sy-rs-exp sy-center-dens]
+
+
+val cmds = List("setup-experiment ${population} ${minSugar} ${maxSugar} ${setup} ${spPopulation} ${spGrowth} ${spAlpha} ${spDiffusion} ${spDiffsteps} ${syCenters} ${syMaxPop} ${syRankSizeExp} ${syCenterDens} ${replication}","run-experiment")
+val model = NetLogo5Task(workDirectory / "HEADLESS_Sugarscape.nlogo", cmds,embedWorkspace = true) set (
+    inputs += (population,minSugar,maxSugar,setup,spPopulation,spGrowth,spAlpha,spDiffusion,spDiffsteps,syCenters,syMaxPop,syRankSizeExp,syCenterDens,replication,id),
+    outputs += (population,minSugar,maxSugar,setup,spPopulation,spGrowth,spAlpha,spDiffusion,spDiffsteps,syCenters,syMaxPop,syRankSizeExp,syCenterDens,replication,id),
+    netLogoOutputs += ("gini", gini),
+    netLogoOutputs += ("moving-window-gini", mwgini),
+    netLogoOutputs += ("moran", moran),netLogoOutputs += ("mean-distance", distance),netLogoOutputs += ("entropy", entropy),netLogoOutputs += ("slope", slope),netLogoOutputs += ("slope-rsquared", rsquared),
+    netLogoOutputs += ("moran-ressource", moranRessource),netLogoOutputs += ("mean-distance-ressource", distanceRessource),netLogoOutputs += ("entropy-ressource", entropyRessource),netLogoOutputs += ("slope-ressource", slopeRessource),netLogoOutputs += ("slope-rsquared-ressource", rsquaredRessource)
+)
+
+
+
+// exploration
+val exploration = ExplorationTask (
+  (LHS (
+    50,
+    spPopulation in Range(4000.0,5000.0),
+    spGrowth in Range(100.0,500.0),
+    spAlpha in Range(0.5,3.0),
+    spDiffusion in Range(0.05,0.2),
+    spDiffsteps in Range(1.0,4.0),
+    syCenters in Range(3.0,6.0),
+    syMaxPop in Range(800.0,1500.0),
+    syRankSizeExp in Range(0.3,2.0),
+    syCenterDens in Range(3.0,5.0)
+    ) withIndex id) x
+     (((setup is 1) x
+     //(population is 100.0) x
+     (population in (10.0 to 510.0 by 50.0)) x
+     //(minSugar is 10.0) x
+     (minSugar in (10.0 to 100.0 by 10.0)) x
+     //(maxSugar is 100.0) x
+     (maxSugar in (110.0 to 200.0 by 10.0))) filter ("minSugar < maxSugar")) x
+     (replication in (UniformDistribution[Int]() take 100))
+  )
+
+
+val purpose = "GRID_SYNTHPATTERN"
+//val purpose = "GRID_FIXED"
+
+// output hook
+val indicshook = AppendToCSVFileHook(workDirectory / "exploration" / ((new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")).format(new Date()))+"_"+purpose+".csv")
+
+// env
+//val local = LocalEnvironment(50)
+val grid = EGIEnvironment("vo.complex-systems.eu")
+
+//exploration -< (model on local hook indicshook)
+exploration -< (model on grid by 500 hook indicshook)

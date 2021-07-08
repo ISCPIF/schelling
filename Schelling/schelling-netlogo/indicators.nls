@@ -1,0 +1,93 @@
+
+;;
+; indicators
+
+
+to update-indicators
+  set unsatisfied-rates lput unsatisfied-rate unsatisfied-rates
+end
+
+
+to-report final-step
+  report ticks
+end
+
+to-report unsatisfied-rate
+  report count turtles with [unsatisfied? = true] / count turtles
+end
+
+to-report dissimilarity
+  let reds count turtles with [color = red] let greens count turtles with [color = green]
+  report (sum [abs (((count turtles-here with [color = red]) / reds) - ((count turtles-here with [color = green]) / greens))] of patches) / 2
+end
+
+to-report moran-red
+  ask patches [ifelse count turtles-here > 0 [set red-patch-ratio count turtles-here with [color = red] / count turtles-here][set red-patch-ratio 0]]
+  report morphology:moran 1
+end
+
+to-report moran-green
+  ask patches [ifelse count turtles-here > 0 [set green-patch-ratio count turtles-here with [color = green] / count turtles-here][set green-patch-ratio 0]]
+  report morphology:moran 2
+end
+
+to-report segregation-entropy
+  let ptot count turtles let pred count turtles with [color = red] let pgreen count turtles with [color = green]
+  let etot ((pred / ptot) * ln (ptot / pred)) + ((pgreen / ptot) * ln (ptot / pgreen))
+  report sum [(count turtles-here / ptot) * (1 - ((((count turtles-here with [color = red] / (max list count turtles-here 1)) * ln ((max list count turtles-here 1) / (max list count turtles-here with [color = red] 1))) + ((count turtles-here with [color = green] / (max list count turtles-here 1)) * ln ((max list count turtles-here 1) / (max list count turtles-here with [color = green] 1)))) / etot))] of patches
+end
+
+to-report exposure-red-green
+  let pred count turtles with [color = red]
+  report sum [((count turtles-here with [color = red]) / pred)*(count turtles-here with [color = green] / (max list 1 count turtles-here)) ] of patches
+end
+
+to-report exposure-green-red
+  let pgreen count turtles with [color = green]
+  report sum [((count turtles-here with [color = green]) / pgreen)*(count turtles-here with [color = red] / (max list 1 count turtles-here)) ] of patches
+end
+
+to-report isolation-red
+  let pred count turtles with [color = red]
+  report sum [((count turtles-here with [color = red]) / pred)*(count turtles-here with [color = red] / (max list 1 count turtles-here)) ] of patches
+end
+
+to-report isolation-green
+  let pgreen count turtles with [color = green]
+  report sum [((count turtles-here with [color = green]) / pgreen)*(count turtles-here with [color = green] / (max list 1 count turtles-here)) ] of patches
+end
+
+to-report delta-red
+  let pred count turtles with [color = red]
+  report sum [abs (((count turtles-here with [color = red]) / pred) - (1 / count patches))] of patches / 2
+end
+
+to-report delta-green
+  let pgreen count turtles with [color = green]
+  report sum [abs (((count turtles-here with [color = green]) / pgreen) - (1 / count patches))] of patches / 2
+end
+
+
+;;
+; morphological indicators
+
+to-report moran-capacity
+  report morphology:moran 0
+end
+
+to-report entropy-capacity
+  report morphology:entropy 0
+end
+
+to-report slope-capacity
+  report first morphology:slope 0
+end
+
+to-report slope-rsquared-capacity
+  report last morphology:slope 0
+end
+
+to-report mean-distance-capacity
+  report morphology:distance 0
+end
+

@@ -1,0 +1,95 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+import fr.iscpif.spacematters.model._
+import move._
+import initial._
+import stop._
+import metric._
+import container._
+
+import scala.io.Source
+
+logger.level("FINE")
+
+// Inputs
+val greenRatio = Val[Double]
+val redRatio = Val[Double]
+val similarWanted = Val[Double]
+val maxCapacity = Val[Double]
+val gridId = Val[String]
+val seed = Val[Long]
+
+// Outputs
+val step = Val[Int]
+val unsatisfiedRatio = Val[Int]
+val dissimilarity = Val[Double]
+val moran = Val[Double]
+val entropy = Val[Double]
+val exposureRedGreen = Val[Double]
+val exposureGreenRed = Val[Double]
+val isolationRedGreen = Val[Double]
+val isolationGreenRed = Val[Double]
+val deltaRedGreen = Val[Double]
+val deltaGreenRed = Val[Double]
+
+
+val modelTask =
+  ScalaTask("""
+    |println("initializing...")
+    |val simulation = new fr.iscpif.spacematters.model.Schelling with fr.iscpif.spacematters.model.initial.RandomState with fr.iscpif.spacematters.model.container.FileContainer with fr.iscpif.spacematters.model.move.RandomMoves with fr.iscpif.spacematters.model.stop.SpeilmanStop {
+    |  override def size: Int = 20
+    |  override def greenRatio: Double = input.greenRatio
+    |  override def redRatio: Double = input.redRatio
+    |  override def maxCapacity: Int = input.maxCapacity.toInt
+    |  override def similarWanted: Double = input.similarWanted
+    |  override def configfile: String = input.gridId
+    |}
+    |println("running...")
+    |val result = simulation.run(newRNG(seed))
+    |val step = result.step
+    |val unsatisfiedRatio = simulation.unsatisifedRatio(result.state)
+    |import fr.iscpif.spacematters.model.Color
+    |import fr.iscpif.spacematters.model.metric
+    |val dissimilarity = metric.dissimilarity(result.state, fr.iscpif.spacematters.model.Green,fr.iscpif.spacematters.model.Red)
+    |val moran = fr.iscpif.spacematters.model.metric.Moran.colorRatioMoran(result.state, fr.iscpif.spacematters.model.Red)
+    |val entropy = metric.segregationEntropy(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)
+    |val exposureRedGreen = metric.exposureOfColor1ToColor2(result.state, fr.iscpif.spacematters.model.Red, fr.iscpif.spacematters.model.Green)
+    |val exposureGreenRed = metric.exposureOfColor1ToColor2(result.state,fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)
+    |val isolationRedGreen = metric.isolation(result.state,fr.iscpif.spacematters.model.Red, fr.iscpif.spacematters.model.Green)
+    |val isolationGreenRed = metric.isolation(result.state, fr.iscpif.spacematters.model.Green,fr.iscpif.spacematters.model.Red)
+    |val deltaRedGreen = metric.delta(result.state, fr.iscpif.spacematters.model.Red, fr.iscpif.spacematters.model.Green)
+    |val deltaGreenRed = metric.delta(result.state, fr.iscpif.spacematters.model.Green, fr.iscpif.spacematters.model.Red)
+    |""".stripMargin
+  ) set (
+    //plugins += pluginsOf[fr.iscpif.spacematters.model.Schelling],
+    inputs += (greenRatio, redRatio, maxCapacity, similarWanted,gridId, seed),
+    outputs += (greenRatio, redRatio, maxCapacity, similarWanted,gridId, seed),
+    outputs += (step, unsatisfiedRatio, dissimilarity, moran, entropy, exposureRedGreen, exposureGreenRed, isolationRedGreen, isolationGreenRed, deltaRedGreen, deltaGreenRed)
+  )
+
+val modelCapsule = Capsule(modelTask)
+
+// get grid ids
+val ids = Source.fromFile(workDirectory / "Grids/15gridsPerClass.csv").getLines().drop(1).map(s => (workDirectory / "Grids/quantGrids" / s.split(",")(0)).toString)
+
+val explo = ExplorationTask (
+      LHS (
+        1,
+        greenRatio in Range(0.0, 1.0),
+        redRatio in Range(0.0, 1.0),
+        similarWanted in Range(0.0, 1.0),
+        maxCapacity in Range(1.0,100.0)
+      ).filter("greenRatio + redRatio < 0.98") x (seed in UniformDistribution[Long]() take 1) x (gridId in ids)
+)
+val purpose = "TEST"
+//val purpose = "SOBOL_ALLGRIDS"
+
+val indicsoutput = AppendToCSVFileHook(workDirectory / "exploration" / ((new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss")).format(new Date()))+"_"+purpose+".csv")
+
+val local = LocalEnvironment(20)
+//val grid = EGIEnvironment("vo.complex-systems.eu", openMOLEMemory = 1500)
+
+
+//explo -< (modelCapsule on grid by 200 hook indicsoutput)
+explo -< (modelCapsule on local hook indicsoutput)

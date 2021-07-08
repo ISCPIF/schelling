@@ -1,0 +1,11 @@
+
+;;
+; patches
+
+
+
+to renormalize-capacity
+  ask patches [set capacity sp-occupants]
+  let total-capacity sum [capacity] of patches
+  ask patches [set capacity capacity * forced-total-capacity / total-capacity]
+end

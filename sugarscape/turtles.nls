@@ -1,0 +1,54 @@
+
+;;
+; turtles
+
+to live-turtles
+  ask turtles [
+    turtle-move
+    turtle-eat
+    set age (age + 1)
+    if sugar <= 0 or age > max-age [
+      hatch 1 [ new-turtle ]
+      die
+    ]
+    run visualization
+  ]
+  
+end
+
+
+to turtle-move ;; turtle procedure
+  ;; consider moving to unoccupied patches in our vision, as well as staying at the current patch
+  let move-candidates (patch-set patch-here (patches at-points vision-points) with [not any? turtles-here])
+  let possible-winners move-candidates with-max [psugar]
+  if any? possible-winners [
+    ;; if there are any such patches move to one of the patches that is closest
+    move-to min-one-of possible-winners [distance myself]
+  ]
+end
+
+to turtle-eat ;; turtle procedure
+  ;; metabolize some sugar, and eat all the sugar on the current patch
+  set sugar (sugar - metabolism + psugar)
+  set psugar 0
+end
+
+
+to new-turtle
+  set color red
+  set shape "circle"
+  set age 0
+  move-to one-of patches with [not any? other turtles-here]
+  set sugar random-float-in-range minimum-sugar-endowment maximum-sugar-endowment
+  set metabolism random-float-in-range min-metabolism max-metabolism
+  set max-age random-in-range min-death-age max-death-age
+  set vision random-in-range min-vision max-vision
+  ;; turtles can look horizontally and vertically up to vision patches
+  ;; but cannot look diagonally at all
+  set vision-points []
+  foreach n-values vision [? + 1][set vision-points sentence vision-points (list (list 0 ?) (list ? 0) (list 0 (- ?)) (list (- ?) 0))]
+  run visualization
+end
+
+
+

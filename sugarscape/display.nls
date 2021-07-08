@@ -1,0 +1,18 @@
+
+
+
+;;
+;; Visualization Procedures
+;;
+
+to no-visualization ;; turtle procedure
+  set color red
+end
+
+to color-agents-by-vision ;; turtle procedure
+  set color red - (vision - 3.5)
+end
+
+to color-agents-by-metabolism ;; turtle procedure
+  set color red + (metabolism - 2.5)
+end

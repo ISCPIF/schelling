@@ -1,0 +1,82 @@
+
+;;
+; setup
+
+
+to setup
+  
+  if headless? = 0 [clear-all]
+  
+  setup-globals
+  setup-patches
+  setup-turtles
+  setup-indicators
+  
+  reset-ticks
+end
+
+
+to setup-globals
+  
+  if maximum-sugar-endowment <= minimum-sugar-endowment [
+    user-message "Oops: the maximum-sugar-endowment must be larger than the minimum-sugar-endowment"
+    stop
+  ]
+  
+  set min-metabolism 1
+  set max-metabolism 4
+  set min-death-age 60
+  set max-death-age 100
+  set min-vision 1
+  set max-vision 6
+  
+  ;set total-time-steps 10000
+  set total-time-steps 1000
+  
+end
+
+to setup-headless
+  set visualization "no-visualization"
+end
+
+
+to setup-turtles
+  create-turtles initial-population [ turtle-setup ]
+end
+
+to turtle-setup ;; turtle procedure
+  new-turtle
+end
+
+to setup-patches
+  
+  if setup-capacity-mode = "synthetic-pattern" [
+     generate-synth-pattern
+  ]
+  
+  if setup-capacity-mode = "kernel-mixture" [
+     generate-synth-city-system
+  ]
+  
+  if setup-capacity-mode = "file" [
+    file-open (word "setup/sugar-map.txt")
+    foreach sort patches[ask ?[set max-psugar file-read]]
+    file-close
+  ]
+  
+  ask patches [
+    if sp-occupants > 0 [set max-psugar sp-occupants]
+    set psugar max-psugar
+    patch-recolor
+  ]
+  
+end
+
+
+
+to setup-indicators
+  
+  update-lorenz-and-gini
+  
+  set gini-values []
+end

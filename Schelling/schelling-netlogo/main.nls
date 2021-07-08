@@ -1,0 +1,37 @@
+
+;
+; main
+
+
+to go-until-stop
+  let stopping? false
+  while [not stopping?][
+    go
+    set stopping? stopping-condition
+  ]
+end
+
+
+to go
+  
+  ; different update scheme
+  ask turtles [
+    set unsatisfied? false
+    let neighboragents turtles in-radius neighborhood-radius
+    let wantedcolor color
+    if count neighboragents with [color = wantedcolor] / count neighboragents < similar-wanted [set unsatisfied? true random-move]
+  ]
+  
+  update-indicators
+  
+  tick
+  
+end
+
+to-report stopping-condition
+  let last-rates sublist unsatisfied-rates (max (list 0 (length unsatisfied-rates - satisfied-variation-window))) (length unsatisfied-rates)
+  let max-steps? (ticks >= max-time-step) if max-steps? = true [show (word "Stopping : max step " max-time-step " reached")]
+  let satisfied? (unsatisfied-rate < 1 - max-satisfied) if satisfied? = true [show (word "Stopping : satisfaction reached, max-satisfied = " max-satisfied)]
+  let stabilized? ((max last-rates - min last-rates) < min-variation and ticks > satisfied-variation-window) if stabilized? = true [show (word "Stopping : max variation = " (max last-rates - min last-rates))]
+  report max-steps? or satisfied? or stabilized?
+end
